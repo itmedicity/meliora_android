@@ -16,12 +16,23 @@ const DashCountTile = ({ navigation, name, count, id }) => {
 
     //dashboard api call count    
     const dashCountUpdation = (state) => {
-        dispatch({ type: GET_DASHBOARD_ACTION, payload: state })
+        // dispatch({ type: GET_DASHBOARD_ACTION, payload: state })
+        if (id === 2) {
+            navigation.navigate('AssignList')
+        } else if (id === 3) {
+            navigation.navigate('Assistance')
+        } else if (id === 4) {
+            navigation.navigate('OnHold')
+        } else if (id === 5) {
+            navigation.navigate('Verify')
+        } else if (id === 6) {
+            navigation.navigate('Completed')
+        }
     }
 
     return (
         <TouchableNativeFeedback
-            onPress={() => dashCountUpdation(state)}
+            onPress={() => dashCountUpdation()}
         >
             <View style={styles.mainTile} >
                 <View style={styles.innerCountTile}>

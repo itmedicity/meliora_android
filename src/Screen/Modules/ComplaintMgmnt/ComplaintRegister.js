@@ -13,8 +13,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import CustomActivityIndicator from '../../../Components/CustomActivityIndicator';
 import { ActionType } from '../../../Redux/Constants/action.type';
 
-const DashCountTile = lazy(() => import('./DashCountTile'));
-const NotAssignedCard = lazy(() => import('./NotAssignedCard'));
+const DashCountTile = lazy(() => import('./DashCountTile'))
+const NotAssignedCard = lazy(() => import('./NotAssignedCard'))
 const FlashListNotAssign = lazy(() => import('./FlashListNotAssign'))
 
 // create a component
@@ -82,12 +82,12 @@ const ComplaintRegister = ({ navigation }) => {
                                 maxWidth: windowWidth,
                             }}
                         >
-                            <DashCountTile id={1} name='New Ticket' count={newTicket} />
-                            <DashCountTile id={2} name='Assigned' count={assigned} />
-                            <DashCountTile id={3} name='Assistance' count={assit} />
-                            <DashCountTile id={4} name='OnHold' count={onHold} />
-                            <DashCountTile id={5} name='For Verify' count={forVerify} />
-                            <DashCountTile id={6} name='Completed' count={completed} />
+                            <DashCountTile navigation={navigation} id={1} name='New Ticket' count={newTicket} />
+                            <DashCountTile navigation={navigation} id={2} name='Assigned' count={assigned} />
+                            <DashCountTile navigation={navigation} id={3} name='Assistance' count={assit} />
+                            <DashCountTile navigation={navigation} id={4} name='OnHold' count={onHold} />
+                            <DashCountTile navigation={navigation} id={5} name='For Verify' count={forVerify} />
+                            <DashCountTile navigation={navigation} id={6} name='Completed' count={completed} />
                         </ScrollView>
                     </Suspense>
                 </View>

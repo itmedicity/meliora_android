@@ -37,10 +37,10 @@ const HearderSecondary = ({ navigation, name, goBackButton }) => {
                 {
                     goBackButton === true ?
                         <TouchableOpacity onPress={() => navigation.navigate('HomeStack')}>
-                            <MaterialIcons name="reply" size={25} color={iconColor.main} />
+                            <MaterialIcons name="home" size={25} color={iconColor.main} />
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <MaterialIcons name="home" size={25} color={iconColor.main} />
+                            <MaterialIcons name="reply" size={25} color={iconColor.main} />
                         </TouchableOpacity>
                 }
             </View>
