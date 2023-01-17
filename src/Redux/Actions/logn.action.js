@@ -1,1 +1,1 @@
-export const loginAction = () => async () => {};
+export const loginAction = () => async () => { };

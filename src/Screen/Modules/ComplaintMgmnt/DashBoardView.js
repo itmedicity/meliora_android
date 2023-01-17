@@ -1,0 +1,54 @@
+//import liraries
+import React, { Component, memo, useState, lazy, useMemo, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { windowWidth } from '../../../utils/Dimentions';
+import { useSelector } from 'react-redux'
+import _ from 'underscore';
+import { styles } from './Style/Style';
+
+const DashCountTile = lazy(() => import('./DashCountTile'));
+
+// create a component
+const DashBoardView = ({ navigation }) => {
+
+    const [newTicket, setNewTicket] = useState(0);
+    const [assigned, setAssigned] = useState(0)
+    const [assit, setAssist] = useState(0)
+    const [onHold, setOnHold] = useState(0)
+    const [forVerify, setForVerify] = useState(0)
+    const [completed, setCompleted] = useState(0)
+
+    const ticketCount = useSelector((state) => state.getTicketCount, _.isEqual);
+    const tickCounts = useMemo(() => ticketCount, [ticketCount]);
+
+    useEffect(() => {
+        const { newTicketCount, assignedTickectCount,
+            assistTicketCount, onHoldTicketCount,
+            forVerifyTicketCount, todayCompletedCount, } = tickCounts;
+        setNewTicket(newTicketCount)
+        setAssigned(assignedTickectCount)
+        setAssist(assistTicketCount)
+        setOnHold(onHoldTicketCount)
+        setForVerify(forVerifyTicketCount)
+        setCompleted(todayCompletedCount)
+    }, [tickCounts])
+
+    return (
+        <ScrollView
+            horizontal={true}
+            fadingEdgeLength={10}
+            showsHorizontalScrollIndicator={false}
+            style={styles.dbvContainer}
+        >
+            <DashCountTile navigation={navigation} id={1} name='New Ticket' count={newTicket} />
+            <DashCountTile navigation={navigation} id={2} name='Assigned' count={assigned} />
+            <DashCountTile navigation={navigation} id={3} name='Assistance' count={assit} />
+            <DashCountTile navigation={navigation} id={4} name='OnHold' count={onHold} />
+            <DashCountTile navigation={navigation} id={5} name='For Verify' count={forVerify} />
+            <DashCountTile navigation={navigation} id={6} name='Completed' count={completed} />
+        </ScrollView>
+    );
+};
+
+//make this component available to the app
+export default memo(DashBoardView);

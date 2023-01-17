@@ -1,13 +1,38 @@
 //import liraries
-import React, { Component, memo, Suspense } from 'react';
+import React, { Component, memo, Suspense, useEffect, useMemo, useState, lazy } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import HearderSecondary from '../../../Components/HearderSecondary';
 import { bgColor, fontColor } from '../../../Constant/Colors';
+import { getAssignedTicketList } from '../../../Redux/Actions/complaintMagmt.action';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
+import { useDispatch, useSelector } from 'react-redux'
+import FlashListNotAssign from './Components/FlashListNotAssign';
+import _ from 'underscore';
+import FlashListCmp from './Components/FlashListCmp';
+
+const NotAssignedCard = lazy(() => import('./Components/NotAssignedCard'))
+const AssignedListCmp = lazy(() => import('./Components/AssignedListCmp'))
 
 // create a component
 const FlashListAssign = ({ navigation }) => {
+
+    const dispatch = useDispatch();
+    // user logged information
+    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
+    const { emp_id, emp_no, emp_dept } = loggedDetl;
+
+    // get the assinned ticket list
+    const assignedList = useSelector((state) => state.getAssignedListUserWise.AssignedList, _.isEqual);
+
+    const [count, setCount] = useState(0)
+    const [refresh, setRefresh] = useState(false)
+
+    useEffect(() => {
+        dispatch(getAssignedTicketList(emp_id));
+    }, [emp_dept, count, emp_id, dispatch])
+
     return (
         <ScrollView style={styles.container}>
             {/* Header  */}
@@ -26,12 +51,13 @@ const FlashListAssign = ({ navigation }) => {
                     height: windowHeight >= 1200 ? windowHeight - 146 : windowHeight - 120
                 }} >
                     <Suspense fallback={<ActivityIndicator />} >
-                        {/* <FlashListNotAssign
-                                notAssigned={notAssigned}
-                                setCount={setCount}
-                                refresh={refresh}
-                                count={count}
-                            /> */}
+                        <FlashListCmp
+                            FlashRenderCmp={AssignedListCmp}
+                            notAssigned={assignedList}
+                            setCount={setCount}
+                            refresh={refresh}
+                            count={count}
+                        />
                     </Suspense>
                 </View>
                 <View style={{

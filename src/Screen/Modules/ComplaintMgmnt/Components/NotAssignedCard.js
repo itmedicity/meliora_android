@@ -1,13 +1,13 @@
 //import liraries
-import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { bgColor, fontColor } from '../../../Constant/Colors';
-import { windowWidth } from '../../../utils/Dimentions';
+import React, { memo } from 'react';
+import { View, Text } from 'react-native';
+import { bgColor, fontColor } from '../../../../Constant/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Button } from 'react-native-paper'
+import { styles } from '../Style/Style';
 
 // create a component
 const NotAssignedCard = ({ data }) => {
@@ -29,27 +29,23 @@ const NotAssignedCard = ({ data }) => {
     } = data;
 
     return (
-        <View style={styles.container}>
+        <View style={styles.FLCP_container}>
             <View style={{
                 marginHorizontal: 5
-                // borderWidth: 0.340,
-                // borderRadius: 2,
             }} >
                 {/* name and department section */}
                 <View style={{
-                    // flex: 1,
                     flexDirection: 'row',
                     paddingVertical: 5
                 }} >
                     <View style={{
-                        // flexGrow: 1,
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center'
                     }} >
-                        <Text style={styles.captionStyle} >{comp_reg_emp}</Text>
+                        <Text style={styles.FLCP_captionStyle} >{comp_reg_emp}</Text>
                         <Text style={{ color: bgColor.statusbar }}>@</Text>
-                        <Text style={{ ...styles.captionStyle, fontStyle: 'italic' }} >{empdept}</Text>
+                        <Text style={{ ...styles.FLCP_captionStyle, fontStyle: 'italic' }} >{empdept}</Text>
                     </View>
                     <View style={{
                         flexDirection: 'row',
@@ -72,9 +68,6 @@ const NotAssignedCard = ({ data }) => {
                     <View style={{
                         flexGrow: 1,
                         flexDirection: 'row',
-                        // borderWidth: 0.340,
-                        // borderRadius: 2,
-                        // minHeight: '50%',
                         borderColor: fontColor.inActiveFont,
                         justifyContent: 'space-between'
                     }} >
@@ -87,7 +80,7 @@ const NotAssignedCard = ({ data }) => {
                             // textTransform: 'capitalize'
                         }} >
                             {/* <Text style={styles.cardTitle} >Register Time :</Text> */}
-                            <Text style={styles.cardTitle} >{compalint_date}</Text>
+                            <Text style={styles.FLCP_cardTitle} >{compalint_date}</Text>
                         </View>
                         <View style={{
                             flexGrow: 1,
@@ -96,7 +89,7 @@ const NotAssignedCard = ({ data }) => {
                             // paddingHorizontal: 5
                         }} >
                             {/* <Text style={styles.cardTitle} >complaint description :</Text> */}
-                            <Text style={styles.cardTitle} >{`#${complaint_slno}/2023`}</Text>
+                            <Text style={styles.FLCP_cardTitle} >{`#${complaint_slno}/2023`}</Text>
                         </View>
                     </View>
                 </View>
@@ -105,9 +98,6 @@ const NotAssignedCard = ({ data }) => {
                     <View style={{
                         flexGrow: 1,
                         flexDirection: 'row',
-                        // borderWidth: 0.340,
-                        // borderRadius: 2,
-                        // minHeight: '50%',
                         borderColor: fontColor.inActiveFont,
                         justifyContent: 'space-between'
                     }} >
@@ -119,8 +109,8 @@ const NotAssignedCard = ({ data }) => {
                             justifyContent: 'flex-start',
                             // textTransform: 'capitalize'
                         }} >
-                            <Text style={styles.headStyle} >request Type :</Text>
-                            <Text style={styles.cardTitle} >{req_type_name}</Text>
+                            <Text style={styles.FLCP_headStyle} >request Type :</Text>
+                            <Text style={styles.FLCP_cardTitle} >{req_type_name}</Text>
                         </View>
                         <View style={{
                             flexGrow: 1,
@@ -129,14 +119,14 @@ const NotAssignedCard = ({ data }) => {
                             // paddingHorizontal: 5
                         }} >
                             {/* <Text style={styles.cardTitle} >complaint description :</Text> */}
-                            <Text style={styles.cardTitle} >{complaint_type_name}</Text>
+                            <Text style={styles.FLCP_cardTitle} >{complaint_type_name}</Text>
                         </View>
                     </View>
                 </View>
                 <View style={{ marginTop: 5 }} >
                     <View>
-                        <Text style={styles.headStyle} >complaint description :
-                            <Text style={styles.cardTitle}> {` ${complaint_desc}`}</Text>
+                        <Text style={styles.FLCP_headStyle} >complaint description :
+                            <Text style={styles.FLCP_cardTitle}> {` ${complaint_desc}`}</Text>
                         </Text>
                     </View>
                 </View>
@@ -144,15 +134,15 @@ const NotAssignedCard = ({ data }) => {
                     // flex: 1,
                     flexDirection: 'row'
                 }} >
-                    <Text style={styles.headStyle}>Location :</Text>
-                    <Text style={styles.cardTitle} >{location}</Text>
+                    <Text style={styles.FLCP_headStyle}>Location :</Text>
+                    <Text style={styles.FLCP_cardTitle} >{location}</Text>
                 </View>
                 <View style={{
                     // flex: 1,
                     flexDirection: 'row'
                 }} >
-                    <Text style={styles.headStyle}>ICRA Recommentation :</Text>
-                    <Text style={styles.cardTitle} >{hic_policy_name}</Text>
+                    <Text style={styles.FLCP_headStyle}>ICRA Recommentation :</Text>
+                    <Text style={styles.FLCP_cardTitle} >{hic_policy_name}</Text>
                 </View>
             </View>
             <View style={{
@@ -222,39 +212,5 @@ const NotAssignedCard = ({ data }) => {
     );
 };
 
-// define your styles
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fffdff',
-        minHeight: 130,
-        padding: 3,
-        borderColor: bgColor.mainBgColor,
-        borderTopWidth: 0.5
-    },
-    cardTitle: {
-        fontFamily: 'Roboto_500Medium',
-        fontSize: windowWidth > 400 ? 12 : 12,
-        paddingHorizontal: 2,
-        // color: fontColor.inActiveFont,
-        color: '#444655',
-        textTransform: 'capitalize'
-    },
-    headStyle: {
-        fontFamily: 'Roboto_500Medium',
-        fontSize: windowWidth > 400 ? 12 : 12,
-        paddingHorizontal: 2,
-        color: fontColor.inActiveFont,
-        textTransform: 'capitalize'
-    },
-    captionStyle: {
-        fontFamily: 'Roboto_700Bold',
-        fontSize: 14,
-        paddingHorizontal: 2,
-        color: '#0c111b',
-        textTransform: 'capitalize'
-    }
-});
-
 //make this component available to the app
-export default NotAssignedCard;
+export default memo(NotAssignedCard);

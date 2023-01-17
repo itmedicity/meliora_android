@@ -38,5 +38,40 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 5,
         overflow: 'hidden',
         color: fontColor.inActiveFont
+    },
+    dbvContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        maxWidth: windowWidth,
+    },
+    FLCP_container: {
+        flex: 1,
+        backgroundColor: '#fffdff',
+        minHeight: 130,
+        padding: 3,
+        borderColor: bgColor.mainBgColor,
+        borderTopWidth: 0.5
+    },
+    FLCP_cardTitle: {
+        fontFamily: 'Roboto_500Medium',
+        fontSize: windowWidth > 400 ? 12 : 12,
+        paddingHorizontal: 2,
+        // color: fontColor.inActiveFont,
+        color: '#444655',
+        textTransform: 'capitalize'
+    },
+    FLCP_headStyle: {
+        fontFamily: 'Roboto_500Medium',
+        fontSize: windowWidth > 400 ? 12 : 12,
+        paddingHorizontal: 2,
+        color: fontColor.inActiveFont,
+        textTransform: 'capitalize'
+    },
+    FLCP_captionStyle: {
+        fontFamily: 'Roboto_700Bold',
+        fontSize: 14,
+        paddingHorizontal: 2,
+        color: '#0c111b',
+        textTransform: 'capitalize'
     }
 });

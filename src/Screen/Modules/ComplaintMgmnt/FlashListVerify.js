@@ -53,6 +53,5 @@ const FlashListVerify = ({ navigation }) => {
     );
 };
 
-
 //make this component available to the app
 export default memo(FlashListVerify);

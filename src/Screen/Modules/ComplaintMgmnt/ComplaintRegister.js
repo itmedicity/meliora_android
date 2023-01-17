@@ -12,58 +12,34 @@ import { DATA, getNotAssinedTicket } from './func/compRegisterFun';
 import { useSelector, useDispatch } from 'react-redux'
 import CustomActivityIndicator from '../../../Components/CustomActivityIndicator';
 import { ActionType } from '../../../Redux/Constants/action.type';
+import { getAssignedTicketList, getAssistTicketList, getNotAssignedComplaintList } from '../../../Redux/Actions/complaintMagmt.action';
 
 const DashCountTile = lazy(() => import('./DashCountTile'))
-const NotAssignedCard = lazy(() => import('./NotAssignedCard'))
-const FlashListNotAssign = lazy(() => import('./FlashListNotAssign'))
+const NotAssignedCard = lazy(() => import('./Components/NotAssignedCard'))
+const FlashListNotAssign = lazy(() => import('./Components/FlashListNotAssign'))
+const DashBoardView = lazy(() => import('./DashBoardView'))
 
 // create a component
 const ComplaintRegister = ({ navigation }) => {
 
-    const {
-        FETCH_NEW_TICKET_COUNT,
-        FETCH_ASSIGNED_COUNT,
-        FETCH_ASSIST_COUNT,
-        FETCH_ONHOLD_COUNT,
-        FTECH_VERIFY_FOR_COUNT,
-        FETCH_TODAY_COMPLETED_COUNT
-    } = ActionType;
-
     const dispatch = useDispatch();
 
     const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const notAssinedTickets = useSelector((state) => state.getNotAssignedCompList.notAssignedList, _.isEqual);
 
+    const notAssinedTicket = useMemo(() => notAssinedTickets, [notAssinedTickets]);
     const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
     const { emp_id, emp_no, emp_dept } = loggedDetl;
-
 
     const [refresh, setRefresh] = useState(false)
     const [count, setCount] = useState(0)
 
-    // dash board count useStates
-    const [newTicket, setNewTicket] = useState(0);
-    const [assigned, setAssigned] = useState(0)
-    const [assit, setAssist] = useState(0)
-    const [onHold, setOnHold] = useState(0)
-    const [forVerify, setForVerify] = useState(0)
-    const [completed, setCompleted] = useState(0)
-    const [notAssignedList, setNotAssignedList] = useState([]);
-
-    const notAssigned = useMemo(() => notAssignedList, [notAssignedList]);
-
+    //not asssigned list from database
     useEffect(() => {
-        //not asssigned list from database
-        getNotAssinedTicket(emp_dept).then((value) => {
-            const { data, message } = value;
-            if (message === 1) {
-                let totalNotAssignCount = Object.keys(data).length
-                let countData = { newTicket: totalNotAssignCount }
-                const notAssinTiketCount = dispatch({ type: FETCH_NEW_TICKET_COUNT, payload: countData })
-                setNotAssignedList(data)
-                setNewTicket(totalNotAssignCount)
-            }
-        })
-    }, [emp_dept, count])
+        dispatch(getNotAssignedComplaintList(emp_dept));
+        dispatch(getAssignedTicketList(emp_id));
+        dispatch(getAssistTicketList(emp_id));
+    }, [emp_dept, count, emp_id, dispatch])
 
     return (
         <SafeAreaView style={styles.container} >
@@ -72,23 +48,7 @@ const ComplaintRegister = ({ navigation }) => {
             <ScrollView style={styles.scrollView} >
                 <View style={styles.dashBord} >
                     <Suspense fallback={<ActivityIndicator />} >
-                        <ScrollView
-                            horizontal={true}
-                            fadingEdgeLength={10}
-                            showsHorizontalScrollIndicator={false}
-                            style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                maxWidth: windowWidth,
-                            }}
-                        >
-                            <DashCountTile navigation={navigation} id={1} name='New Ticket' count={newTicket} />
-                            <DashCountTile navigation={navigation} id={2} name='Assigned' count={assigned} />
-                            <DashCountTile navigation={navigation} id={3} name='Assistance' count={assit} />
-                            <DashCountTile navigation={navigation} id={4} name='OnHold' count={onHold} />
-                            <DashCountTile navigation={navigation} id={5} name='For Verify' count={forVerify} />
-                            <DashCountTile navigation={navigation} id={6} name='Completed' count={completed} />
-                        </ScrollView>
+                        <DashBoardView navigation={navigation} />
                     </Suspense>
                 </View>
                 <View style={styles.card} >
@@ -97,7 +57,7 @@ const ComplaintRegister = ({ navigation }) => {
                         <View>
                             <Text
                                 style={styles.cardTitle}
-                                onPress={() => { alert('hai') }}
+                            // onPress={() => { alert('hai') }}
                             >Add New Tickets</Text>
                         </View>
                     </View>
@@ -107,7 +67,7 @@ const ComplaintRegister = ({ navigation }) => {
                     }} >
                         <Suspense fallback={<ActivityIndicator />} >
                             <FlashListNotAssign
-                                notAssigned={notAssigned}
+                                notAssigned={notAssinedTicket}
                                 setCount={setCount}
                                 refresh={refresh}
                                 count={count}
@@ -148,7 +108,7 @@ const styles = StyleSheet.create({
     },
     card: {
         flex: 1,
-        backgroundColor: 'powderblue',
+        backgroundColor: '#fffdff',
         borderRadius: 5,
         overflow: 'hidden'
     },

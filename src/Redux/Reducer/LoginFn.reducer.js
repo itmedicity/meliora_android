@@ -2,14 +2,7 @@ import { ActionType } from "../Constants/action.type";
 
 const {
   FETCH_LOGIN_INFORMATION,
-  FETCH_PUSH_TOKEN,
-  FETCH_NEW_TICKET_COUNT,
-  FETCH_ASSIGNED_COUNT,
-  FETCH_ASSIST_COUNT,
-  FETCH_ONHOLD_COUNT,
-  FTECH_VERIFY_FOR_COUNT,
-  FETCH_TODAY_COMPLETED_COUNT,
-  GET_DASHBOARD_ACTION
+  FETCH_PUSH_TOKEN
 } = ActionType;
 
 const initialLoginState = {
@@ -46,43 +39,3 @@ export const expoPushToken = (state = pushToken, { type, payload }) => {
 }
 
 
-const ticketCount = {
-  newTicketCount: 0,
-  assignedTickectCount: 0,
-  assistTicketCount: 0,
-  onHoldTicketCount: 0,
-  forVerifyTicketCount: 0,
-  todayCompletedCount: 0
-}
-
-export const getTicketCount = (state = ticketCount, { type, payload }) => {
-  switch (type) {
-    case FETCH_NEW_TICKET_COUNT:
-      return { ...state, newTicketCount: payload.newTicketCount };
-    case FETCH_ASSIGNED_COUNT:
-      return { ...state, assignedTickectCount: payload.assignedTickectCount };
-    case FETCH_ASSIST_COUNT:
-      return { ...state, assistTicketCount: payload.assistTicketCount };
-    case FETCH_ONHOLD_COUNT:
-      return { ...state, onHoldTicketCount: payload.onHoldTicketCount };
-    case FTECH_VERIFY_FOR_COUNT:
-      return { ...state, forVerifyTicketCount: payload.forVerifyTicketCount };
-    case FETCH_TODAY_COMPLETED_COUNT:
-      return { ...state, todayCompletedCount: payload.todayCompletedCount };
-    default:
-      return state;
-  }
-}
-
-const dashCountVariable = {
-  dashCount: 0
-}
-
-export const getDashCountVariable = (state = dashCountVariable, { type, payload }) => {
-  switch (type) {
-    case GET_DASHBOARD_ACTION:
-      return { ...state, dashCount: payload };
-    default:
-      return state;
-  }
-}
