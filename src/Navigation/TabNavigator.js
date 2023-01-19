@@ -18,6 +18,7 @@ const Tab = createBottomTabNavigator();
 
 // create a component
 const TabNavigator = () => {
+
   return (
     <Tab.Navigator
       screenOptions={{

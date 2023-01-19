@@ -1,5 +1,5 @@
 //import liraries
-import React, { memo } from 'react';
+import React, { memo, useState, lazy, Suspense, useCallback, useMemo } from 'react';
 import { View, Text } from 'react-native';
 import { bgColor, fontColor } from '../../../../Constant/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -8,9 +8,22 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Button } from 'react-native-paper'
 import { styles } from '../Style/Style';
+import _ from 'underscore';
+import { useSelector } from 'react-redux'
+import { format } from 'date-fns'
+import { axiosApi } from '../../../../config/Axiox';
+
+const CustmDIalog = lazy(() => import('./CustmDIalog'));
 
 // create a component
-const NotAssignedCard = ({ data }) => {
+const NotAssignedCard = ({ data, setCount }) => {
+
+    console.log(setCount)
+    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
+    const { emp_id, emp_dept } = loggedDetl;
+
+    const [visible, setVisible] = useState(false);
 
     const {
         complaint_slno, //complaint slno
@@ -28,8 +41,42 @@ const NotAssignedCard = ({ data }) => {
         compalint_priority
     } = data;
 
+    const postData = {
+        complaint_slno: complaint_slno,
+        assigned_emp: emp_id,
+        assigned_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+        assign_rect_status: 0,
+        assigned_user: emp_id
+    }
+
+    //quick assign function
+    const quickAssignMent = useCallback(async () => {
+        // console.log(postData)
+        const result = await axiosApi.post('/complaintassign', postData);
+        const { message, success } = result.data;
+        if (success === 1) {
+            alert(message)
+            setCount(complaint_slno)
+        } else if (success === 0) {
+            alert(message)
+        } else {
+            alert(message)
+        }
+
+    }, [postData])
+
+    // const quickAsign = useCallback(() => quickAssignMent, [quickAssignMent]);
+
+
     return (
         <View style={styles.FLCP_container}>
+            <Suspense>
+                <CustmDIalog
+                    visible={visible}
+                    setVisible={setVisible}
+                    quickAssignMent={quickAssignMent}
+                />
+            </Suspense>
             <View style={{
                 marginHorizontal: 5
             }} >
@@ -167,6 +214,8 @@ const NotAssignedCard = ({ data }) => {
                             borderBottomLeftRadius: 10,
                         }}
                         labelStyle={{ color: '#40a629' }}
+                        // onPress={() => setVisible(!visible)}
+                        onPress={() => quickAssignMent()}
                     >
                         Quick
                     </Button>

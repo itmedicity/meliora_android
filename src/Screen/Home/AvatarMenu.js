@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component, memo } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { windowWidth } from '../../utils/Dimentions';
 import { Avatar } from 'react-native-paper'
@@ -8,21 +8,43 @@ import { bgColor, fontColor } from '../../Constant/Colors';
 
 // create a component
 const AvatarMenu = ({ navigation, mainTitle, icon, iconColor, avatarColor, routeName }) => {
+    const [dimention, setDimention] = useState({
+        width: 82,
+        height: 90
+    })
+    const [marginHorizontal, setMarginHorizontal] = useState(0);
+    const [marginVertical, setMarginVertical] = useState(0);
+
+    useEffect(() => {
+        if (windowWidth > 480) {
+            //for tablets
+            setDimention({ width: 103, height: 100 })
+            setMarginHorizontal(5)
+            setMarginVertical(5)
+        } else {
+            //for phones
+            setDimention({ width: ((windowWidth - 34) / 4), height: 84 })
+            setMarginHorizontal(3)
+            setMarginVertical(3)
+        }
+
+    }, [windowWidth])
+
+    const navigateRoute = useCallback(() => {
+        navigation.navigate(routeName);
+    })
+
     return (
         <TouchableOpacity
-            onPress={() => navigation.navigate(routeName)}
+            onPress={() => navigateRoute()}
         >
             <View style={{
-                // backgroundColor: 'green',
-                minWidth: windowWidth < 400 ? 80 : 100,
-                maxWidth: windowWidth < 400 ? 80 : 100,
-                minHeight: windowWidth < 400 ? 85 : 100,
-                maxHeight: 100,
+                width: dimention.width,
+                height: dimention.height,
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginHorizontal: windowWidth < 400 ? 3.5 : 6.5,
-                // backgroundColor: 'blue'
-
+                marginHorizontal: marginHorizontal,
+                marginVertical: marginVertical,
             }} >
                 <Avatar.Icon
                     size={windowWidth < 400 ? 50 : 60}

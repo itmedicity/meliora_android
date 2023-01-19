@@ -1,21 +1,13 @@
 //import liraries
-import { FlashList } from '@shopify/flash-list';
-import React, { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { lazy, memo, Suspense, useEffect, useMemo, useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native';
 import _ from 'underscore';
 import HearderSecondary from '../../../Components/HearderSecondary';
-import { axiosApi } from '../../../config/Axiox';
 import { bgColor, fontColor } from '../../../Constant/Colors';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
-import { DATA, getNotAssinedTicket } from './func/compRegisterFun';
 import { useSelector, useDispatch } from 'react-redux'
-import CustomActivityIndicator from '../../../Components/CustomActivityIndicator';
-import { ActionType } from '../../../Redux/Constants/action.type';
 import { getAssignedTicketList, getAssistTicketList, getNotAssignedComplaintList } from '../../../Redux/Actions/complaintMagmt.action';
 
-const DashCountTile = lazy(() => import('./DashCountTile'))
-const NotAssignedCard = lazy(() => import('./Components/NotAssignedCard'))
 const FlashListNotAssign = lazy(() => import('./Components/FlashListNotAssign'))
 const DashBoardView = lazy(() => import('./DashBoardView'))
 
@@ -29,10 +21,12 @@ const ComplaintRegister = ({ navigation }) => {
 
     const notAssinedTicket = useMemo(() => notAssinedTickets, [notAssinedTickets]);
     const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
-    const { emp_id, emp_no, emp_dept } = loggedDetl;
+    const { emp_id, emp_dept } = loggedDetl;
 
     const [refresh, setRefresh] = useState(false)
     const [count, setCount] = useState(0)
+
+    const [customHeight, setCustomHeight] = useState(0)
 
     //not asssigned list from database
     useEffect(() => {
@@ -40,6 +34,16 @@ const ComplaintRegister = ({ navigation }) => {
         dispatch(getAssignedTicketList(emp_id));
         dispatch(getAssistTicketList(emp_id));
     }, [emp_dept, count, emp_id, dispatch])
+
+    useEffect(() => {
+        if (windowHeight > 750) {
+            setCustomHeight(windowHeight - 280)
+        } else if (windowHeight < 737 && windowHeight > 724) {
+            setCustomHeight(windowHeight - 240)
+        } else if (windowHeight < 738) {
+            setCustomHeight(windowHeight - 250)
+        }
+    }, [windowHeight])
 
     return (
         <SafeAreaView style={styles.container} >
@@ -63,7 +67,7 @@ const ComplaintRegister = ({ navigation }) => {
                     </View>
                     <View style={{
                         maxWidth: windowWidth,
-                        height: windowHeight >= 1200 ? windowHeight - 280 : windowHeight - 220
+                        height: customHeight
                     }} >
                         <Suspense fallback={<ActivityIndicator />} >
                             <FlashListNotAssign
@@ -78,7 +82,7 @@ const ComplaintRegister = ({ navigation }) => {
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundColor: bgColor.cardBg,
-                        minHeight: 20
+                        height: 20
                     }} >
                         <Text style={{
                             ...styles.cardTitle,
@@ -89,6 +93,11 @@ const ComplaintRegister = ({ navigation }) => {
                     </View>
                 </View>
             </ScrollView>
+            {/* {true &&
+                <View style={styles.loading}>
+                    <ActivityIndicator size='large' color='blue' />
+                </View>
+            } */}
         </SafeAreaView>
     );
 };
@@ -115,7 +124,7 @@ const styles = StyleSheet.create({
     cardHeader: {
         backgroundColor: bgColor.cardBg,
         // backgroundColor: "powderblue",
-        minHeight: 30,
+        height: 30,
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 5,
@@ -130,8 +139,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         overflow: 'hidden',
         color: fontColor.inActiveFont
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 
 //make this component available to the app
-export default ComplaintRegister;
+export default memo(ComplaintRegister);

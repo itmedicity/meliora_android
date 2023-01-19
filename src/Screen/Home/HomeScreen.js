@@ -72,7 +72,6 @@ const HomeScreen = ({ navigation }) => {
 
   const { FETCH_PUSH_TOKEN } = ActionType;
 
-
   //getting the pushtoken
   useEffect(() => {
     const configurePushNotifications = async () => {
@@ -111,19 +110,17 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     const subscription1 = Notifications.addNotificationReceivedListener(
       (notification) => {
-        console.log("NOTIFICATION RECEIVED LISTNER");
-        console.log(notification);
+        // console.log("NOTIFICATION RECEIVED LISTNER");
+        // console.log(notification);
         const userName = notification.request.content.data;
-        console.log(userName);
       }
     );
 
     const subscription2 = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        console.log("NOTIFICATION RESPONSE RECEIVED LISTNER");
-        console.log(response);
+        // console.log("NOTIFICATION RESPONSE RECEIVED LISTNER");
+        // console.log(response);
         const userName = response.notification.request.content.data;
-        console.log(userName);
       }
     );
 
@@ -209,9 +206,6 @@ const HomeScreen = ({ navigation }) => {
   //   // });
   // };
 
-
-
-
   return (
     <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
       {/* Header Component */}
@@ -289,6 +283,15 @@ const styles = StyleSheet.create({
   },
   avatar: {
     backgroundColor: bgColor.cardBg
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 

@@ -1,8 +1,8 @@
 //import liraries
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import { fontColor } from '../../../Constant/Colors';
-import { windowWidth } from '../../../utils/Dimentions';
+import { windowHeight } from '../../../utils/Dimentions';
 import { ActionType } from '../../../Redux/Constants/action.type';
 import { useDispatch } from 'react-redux'
 
@@ -50,9 +50,9 @@ const DashCountTile = ({ navigation, name, count, id }) => {
 const styles = StyleSheet.create({
     mainTile: {
         flex: 1,
-        minHeight: windowWidth < 400 ? 80 : 110,
-        minWidth: windowWidth < 400 ? 80 : 124,
-        maxWidth: windowWidth < 400 ? 80 : 124,
+        height: windowHeight < 750 ? 80 : 110,
+        minWidth: windowHeight < 750 ? 80 : 124,
+        maxWidth: windowHeight < 750 ? 80 : 124,
         borderWidth: 0.1,
         borderRadius: 10,
         borderColor: '#5392f7',
@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_700Bold',
         fontSize: 10,
         color: fontColor.mainBlue,
-    }
+    },
+
 });
 
 //make this component available to the app

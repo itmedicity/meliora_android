@@ -29,10 +29,22 @@ const FlashListAssign = ({ navigation }) => {
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
 
+    const [customHeight, setCustomHeight] = useState(0)
+
     useEffect(() => {
         dispatch(getAssignedTicketList(emp_id));
     }, [emp_dept, count, emp_id, dispatch])
 
+    //screen height adjustment
+    useEffect(() => {
+        if (windowHeight > 750) {
+            setCustomHeight(windowHeight - 146)
+        } else if (windowHeight < 737 && windowHeight > 724) {
+            setCustomHeight(windowHeight - 120)
+        } else if (windowHeight < 700) {
+            setCustomHeight(windowHeight - 150)
+        }
+    }, [windowHeight])
     return (
         <ScrollView style={styles.container}>
             {/* Header  */}
@@ -43,17 +55,17 @@ const FlashListAssign = ({ navigation }) => {
             />
             <View style={styles.card} >
                 <View style={styles.cardHeader} >
-                    <Text style={styles.cardTitle} >Tickets</Text>
+                    <Text style={styles.cardTitle} >Assigned Tickets</Text>
                 </View>
                 <View style={{
                     flex: 1,
                     maxWidth: windowWidth,
-                    height: windowHeight >= 1200 ? windowHeight - 146 : windowHeight - 120
+                    height: customHeight
                 }} >
                     <Suspense fallback={<ActivityIndicator />} >
                         <FlashListCmp
                             FlashRenderCmp={AssignedListCmp}
-                            notAssigned={assignedList}
+                            Assigned={assignedList}
                             setCount={setCount}
                             refresh={refresh}
                             count={count}
@@ -93,7 +105,7 @@ const styles = StyleSheet.create({
     },
     card: {
         flex: 1,
-        backgroundColor: 'powderblue',
+        backgroundColor: '#fffdff',
         borderRadius: 5,
         overflow: 'hidden'
     },
