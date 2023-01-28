@@ -1,7 +1,6 @@
 //import liraries
-import React, { Component, memo, useState, lazy, useMemo, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { windowWidth } from '../../../utils/Dimentions';
+import React, { memo, useState, lazy, useMemo, useEffect } from 'react';
+import { ScrollView } from 'react-native';
 import { useSelector } from 'react-redux'
 import _ from 'underscore';
 import { styles } from './Style/Style';
@@ -45,7 +44,7 @@ const DashBoardView = ({ navigation }) => {
             <DashCountTile navigation={navigation} id={3} name='Assistance' count={assit} />
             <DashCountTile navigation={navigation} id={4} name='OnHold' count={onHold} />
             <DashCountTile navigation={navigation} id={5} name='For Verify' count={forVerify} />
-            <DashCountTile navigation={navigation} id={6} name='Completed' count={completed} />
+            <DashCountTile navigation={navigation} id={6} name='On Progress' count={completed} />
         </ScrollView>
     );
 };

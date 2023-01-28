@@ -1,12 +1,11 @@
 //import liraries
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  Image,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import {

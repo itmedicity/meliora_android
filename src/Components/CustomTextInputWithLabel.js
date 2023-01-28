@@ -1,5 +1,5 @@
 //import liraries
-import React from "react";
+import React, { memo } from "react";
 import {
   View,
   Text,
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default CustomTextInputWithLabel;
+export default memo(CustomTextInputWithLabel);

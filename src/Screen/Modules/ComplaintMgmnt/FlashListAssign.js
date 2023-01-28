@@ -1,17 +1,16 @@
 //import liraries
-import React, { Component, memo, Suspense, useEffect, useMemo, useState, lazy } from 'react';
+import React, { memo, Suspense, useEffect, useMemo, useState, lazy } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import HearderSecondary from '../../../Components/HearderSecondary';
 import { bgColor, fontColor } from '../../../Constant/Colors';
-import { getAssignedTicketList } from '../../../Redux/Actions/complaintMagmt.action';
+import { getTheAssignedListOnly } from '../../../Redux/Actions/complaintMagmt.action';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 import { useDispatch, useSelector } from 'react-redux'
-import FlashListNotAssign from './Components/FlashListNotAssign';
 import _ from 'underscore';
 import FlashListCmp from './Components/FlashListCmp';
+import ApiGetFun from './func/ApiGetFun';
 
-const NotAssignedCard = lazy(() => import('./Components/NotAssignedCard'))
 const AssignedListCmp = lazy(() => import('./Components/AssignedListCmp'))
 
 // create a component
@@ -24,7 +23,10 @@ const FlashListAssign = ({ navigation }) => {
     const { emp_id, emp_no, emp_dept } = loggedDetl;
 
     // get the assinned ticket list
-    const assignedList = useSelector((state) => state.getAssignedListUserWise.AssignedList, _.isEqual);
+    // const assignedList = useSelector((state) => state.getAssignedListUserWise.AssignedList, _.isEqual);
+
+    const assignedList = useSelector((state) => state.getAssignedListOnly.assignedList, _.isEqual);
+    // console.log(assigned)
 
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
@@ -32,7 +34,8 @@ const FlashListAssign = ({ navigation }) => {
     const [customHeight, setCustomHeight] = useState(0)
 
     useEffect(() => {
-        dispatch(getAssignedTicketList(emp_id));
+        // dispatch(getAssignedTicketList(emp_id));
+        dispatch(getTheAssignedListOnly(emp_id))
     }, [emp_dept, count, emp_id, dispatch])
 
     //screen height adjustment
@@ -47,6 +50,7 @@ const FlashListAssign = ({ navigation }) => {
     }, [windowHeight])
     return (
         <ScrollView style={styles.container}>
+            <ApiGetFun />
             {/* Header  */}
             <HearderSecondary
                 navigation={navigation}

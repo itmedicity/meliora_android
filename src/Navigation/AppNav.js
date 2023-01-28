@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
 import { useSelector } from "react-redux";
 import AppStack from "./AppStack";
 import AuthStack from "./AuthStack";

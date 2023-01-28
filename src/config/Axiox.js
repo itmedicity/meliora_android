@@ -11,11 +11,6 @@ export const axiosApi = axios.create({
   },
 });
 
-// axiosApi.interceptors.request.use(function (config) {
-//   return config;
-// }, function (err) {
-//   console.log(err);
-// })
 
 axiosApi.interceptors.request.use(
   async (config) => {
@@ -32,10 +27,5 @@ axiosApi.interceptors.request.use(
 )
 
 
-
-// const a = getToken().then((val) => {
-//   return val
-// })
-// console.log(a)
 
 

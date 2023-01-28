@@ -1,22 +1,12 @@
 //import liraries
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import { fontColor } from '../../../Constant/Colors';
 import { windowHeight } from '../../../utils/Dimentions';
-import { ActionType } from '../../../Redux/Constants/action.type';
-import { useDispatch } from 'react-redux'
-
 // create a component
 const DashCountTile = ({ navigation, name, count, id }) => {
-
-    const dispatch = useDispatch();
-    const { GET_DASHBOARD_ACTION } = ActionType;
-
-    const [state, setState] = useState(id)
-
     //dashboard api call count    
-    const dashCountUpdation = (state) => {
-        // dispatch({ type: GET_DASHBOARD_ACTION, payload: state })
+    const dashCountUpdation = () => {
         if (id === 2) {
             navigation.navigate('AssignList')
         } else if (id === 3) {

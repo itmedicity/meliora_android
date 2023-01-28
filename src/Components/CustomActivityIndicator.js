@@ -1,6 +1,6 @@
 //import liraries
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { memo } from 'react';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { bgColor } from '../Constant/Colors';
 
 // create a component
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default CustomActivityIndicator;
+export default memo(CustomActivityIndicator);

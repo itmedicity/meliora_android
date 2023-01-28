@@ -2,10 +2,7 @@
 import React, { lazy, Suspense } from "react";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../Screen/Home/HomeScreen";
 import { ActivityIndicator } from "react-native-paper";
-// import TabNavigator from "./TabNavigator";
-// import ComplaintRegister from "../Screen/Modules/ComplaintMgmnt/ComplaintRegister";
 
 const TabNavigator = lazy(() => import('./TabNavigator'));
 const ComplaintRegister = lazy(() => import('../Screen/Modules/ComplaintMgmnt/ComplaintRegister'))
@@ -14,6 +11,7 @@ const FlashListAssistance = lazy(() => import('../Screen/Modules/ComplaintMgmnt/
 const FlashListOnHold = lazy(() => import('../Screen/Modules/ComplaintMgmnt/FlashListOnHold'))
 const FlashListVerify = lazy(() => import('../Screen/Modules/ComplaintMgmnt/FlashListVerify'))
 const FlashListCompleted = lazy(() => import('../Screen/Modules/ComplaintMgmnt/FlashListCompleted'))
+const Profile = lazy(() => import("../Screen/Profile/Profile"))
 
 
 // create a component
@@ -35,6 +33,7 @@ const HomeStack = () => {
         <Stack.Screen name="OnHold" component={FlashListOnHold} />
         <Stack.Screen name="Verify" component={FlashListVerify} />
         <Stack.Screen name="Completed" component={FlashListCompleted} />
+        <Stack.Screen name="Profile" component={Profile} />
       </Stack.Navigator>
     </Suspense>
   );

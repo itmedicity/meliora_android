@@ -1,11 +1,9 @@
 //import liraries
-import React, { Component } from "react";
+import React from "react";
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
-import { Card } from "react-native-paper";
 import HeaderMain from "../../Components/HeaderMain";
 import { bgColor, fontColor } from "../../Constant/Colors";
 import DashCardMain from "./DashCardMain";
-import { Octicons } from '@expo/vector-icons';
 
 // create a component
 const DashBoard = ({ navigation }) => {

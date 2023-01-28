@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { bgColor, fontColor, iconColor } from "../Constant/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
 
 // create a component
 const HeaderMain = ({ navigation, name }) => {

@@ -4,13 +4,11 @@ import {
     View,
     Text,
     StyleSheet,
-    ImageBackground,
     StatusBar,
     TouchableOpacity,
 } from "react-native";
 import { bgColor, fontColor, iconColor } from "../Constant/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
 import { windowWidth } from "../utils/Dimentions";
 // create a component
 const HearderSecondary = ({ navigation, name, goBackButton }) => {

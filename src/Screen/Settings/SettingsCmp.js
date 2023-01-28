@@ -1,33 +1,189 @@
 //import liraries
-import React, { Component, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
-import HeaderMain from "../../Components/HeaderMain";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
+import { View, Text, StyleSheet, Alert } from "react-native";
 import { bgColor, fontColor } from "../../Constant/Colors";
-import { Card, Button, Title, Switch } from 'react-native-paper';
-import { useSelector } from "react-redux";
+import { Card, Switch } from 'react-native-paper';
+import { useDispatch, useSelector } from "react-redux";
 import _ from "underscore";
+import { format } from "date-fns";
+import { axiosApi } from "../../config/Axiox";
+import { getMobileAppCreditial } from "../../Redux/Actions/common.action";
 // create a component
 
 const SettingsCmp = ({ title }) => {
 
-    const [isSwitchOn, setIsSwitchOn] = useState(false);
-    const token = useSelector((state) => state.expoPushToken, _.isEqual)
+    const dispatch = useDispatch();
+    const [count, setCount] = useState(0)
+    const [mobileAppRegisterd, setMobileAppRegisterd] = useState(false)
+    const [pushNotRequired, setPushNotRequired] = useState(false)
 
-    console.log(token)
+    const [apiStatus, setApiStatus] = useState(false)
 
-    const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+    const [settings, setSettings] = useState(false);
+    const [notification, setNotification] = useState(false);
+
+    // getting the expo credential updation details
+    const loginInform = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const loginEmpDetl = useMemo(() => loginInform, [loginInform]);
+
+    const { emp_id } = loginEmpDetl;
+
+    useEffect(() => {
+        dispatch(getMobileAppCreditial(emp_id));
+    }, [emp_id, count])
+
+    const token = useSelector((state) => state.expoPushToken.payload, _.isEqual);
+    const appToken = useMemo(() => token, [token]);
+
+    //expo status in database
+
+    const expoDetl = useSelector((state) => state.getMobileAppCreditial, _.isEqual);
+    const expoCredDetl = useMemo(() => expoDetl, [expoDetl]);
+
+    useEffect(() => {
+        const { creditialStatus, status } = expoCredDetl;
+        setApiStatus(status);
+        if (status === true) {
+            const { mob_app_required, mobile_app_registred } = creditialStatus;
+
+            if (mob_app_required === 1) {
+                // setMobileAppRegisterd(true)
+                setNotification(true)
+            } else {
+                // setMobileAppRegisterd(false)
+                setNotification(false)
+            };
+
+            if (mobile_app_registred === 1) {
+                // setPushNotRequired(true)
+                setSettings(true)
+            } else {
+                // setPushNotRequired(false);
+                setSettings(false)
+            }
+        }
+
+    }, [expoCredDetl])
+
+
+
+    const postData = {
+        mobile_app_registred: 1,
+        app_token: appToken?.data,
+        mob_reg_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+        token_valid: 1,
+        mobile_ip: 0,
+        mob_app_required: 1,
+        em_id: emp_id
+    }
+
+    const delpostData = {
+        mobile_app_registred: 0,
+        app_token: null,
+        mob_reg_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+        token_valid: 0,
+        mobile_ip: 0,
+        mob_app_required: 0,
+        em_id: emp_id
+    }
+
+    // Enable notification settings update the token to the backend
+    const updateTheExpoPushToken = useCallback(async () => {
+        setSettings(!settings);
+
+        const updateExpoToken = async (data) => {
+            // console.log(data)
+            const result = await axiosApi.patch("/common/mobileapp/update", data);
+            const { success, message } = await result.data;
+            if (success === 1) {
+                Alert.alert("Notification Settings Enabled Successfully")
+            } else {
+                Alert.alert("Error ! Contact System Administrator")
+            }
+            setCount(count + 1)
+        }
+
+        const deleteExpoToken = async (data) => {
+            const result = await axiosApi.patch("/common/mobileapp/update", data);
+            const { success, message } = await result.data;
+            if (success === 1) {
+                Alert.alert("Notification Settings Removed Successfully")
+            } else {
+                Alert.alert("Error ! Contact System Administrator")
+            }
+            setCount(count + 1)
+        }
+
+        if (settings === true) {
+            deleteExpoToken(delpostData)
+        } else {
+            updateExpoToken(postData)
+        }
+
+    }, [postData, delpostData])
+
+
+    //diable the notification enable / disable option in DB
+
+    const enableDisableNotificationSetting = useCallback(async () => {
+        if (notification === false) {
+            // update required to 1 for enable the notification
+            let data = {
+                mob_app_required: 1,
+                em_id: emp_id
+            }
+            const result = await axiosApi.patch("/common/mobapprequired/update", data);
+            const { success } = await result.data;
+            if (success === 1) {
+                Alert.alert("Push Notification Enabled")
+                setNotification(true)
+            } else {
+                Alert.alert("Error ! , Contact EDP")
+                setNotification(false)
+            }
+        } else {
+            // update required to 0 for disable the notification
+            let data = {
+                mob_app_required: 0,
+                em_id: emp_id
+            }
+            const result = await axiosApi.patch("/common/mobapprequired/update", data);
+            const { success } = await result.data;
+            if (success === 1) {
+                Alert.alert("Push Notification Disabled")
+                setNotification(false)
+            } else {
+                Alert.alert("Error ! , Contact EDP")
+                setNotification(true)
+            }
+        }
+
+    }, [notification])
 
     return (
         <Card mode="contained" style={{ backgroundColor: bgColor.switchColor, marginVertical: 2 }} >
+            <View style={{ flex: 1, flexDirection: 'row' }} >
+                <View style={styles.TextContainer} >
+                    <Text style={styles.textContainText} >Enable Notification Settings</Text>
+                </View>
+                <View style={styles.switchContainer}>
+                    <Switch
+                        value={settings}
+                        onValueChange={useCallback(() => updateTheExpoPushToken(), [updateTheExpoPushToken])}
+                        color="#fa3f7e"
+                    />
+                </View>
+            </View>
             <View style={{ flex: 1, flexDirection: 'row' }} >
                 <View style={styles.TextContainer} >
                     <Text style={styles.textContainText} >{title}</Text>
                 </View>
                 <View style={styles.switchContainer}>
                     <Switch
-                        value={isSwitchOn}
-                        onValueChange={onToggleSwitch}
+                        value={notification}
+                        onValueChange={useCallback(() => enableDisableNotificationSetting(), [enableDisableNotificationSetting])}
                         color="#fa3f7e"
+                        disabled={!settings}
                     />
                 </View>
             </View>

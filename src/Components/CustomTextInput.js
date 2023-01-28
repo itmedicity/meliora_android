@@ -1,5 +1,5 @@
 //import liraries
-import React from "react";
+import React, { memo } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 
 // create a component
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default CustomTextInput;
+export default memo(CustomTextInput);

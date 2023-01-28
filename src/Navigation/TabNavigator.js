@@ -1,18 +1,14 @@
 //import liraries
 import React from "react";
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import Settings from "../Screen/Settings/Settings";
-import DashBoard from "../Screen/Dashboard/DashBoard";
-// import HomeStack from "./HomeStack";
-
+import Profile from "../Screen/Profile/Profile";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { bgColor, iconColor } from "../Constant/Colors";
 import SettingStack from "./SettingStack";
 import HomeScreen from "../Screen/Home/HomeScreen";
+import ChatStack from "./ChatStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +38,8 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="DashBoard"
-        component={DashBoard}
+        component={Profile}
+        // component={DashBoard}
         options={{
           // tabBarBadge: 9,
           // tabBarBadgeStyle: { backgroundColor: iconColor.tabBarIconColor },
@@ -66,7 +63,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Message"
-        component={SettingStack}
+        component={ChatStack}
         options={{
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="message1" color={color} size={size} />

@@ -3,7 +3,6 @@ import { combineReducers } from "redux";
 import {
   loginFuntion,
   expoPushToken,
-
 } from "../Reducer/LoginFn.reducer";
 
 import {
@@ -14,8 +13,18 @@ import {
   getAssitanceListUserWise,
   getTodayCompletedList,
   getOnholdComplaintList,
-  getTotalPendingVerify
+  getTotalPendingVerify,
+  getTheActulAssingedEmp,
+  getAssignedListOnly,
+  getRectifiedListForVerify,
+  getTotalOnProgressTicket
 } from "../Reducer/complaintMagmnt.reducer"
+import {
+  overLayLoadingStatus,
+  loggedEmployeeCmpMagmntFun,
+  getCompanyDepartment,
+  getMobileAppCreditial
+} from "../Reducer/common.reduer"
 
 
 const reducer = combineReducers({
@@ -28,7 +37,15 @@ const reducer = combineReducers({
   getAssitanceListUserWise,
   getTodayCompletedList,
   getOnholdComplaintList,
-  getTotalPendingVerify
+  getTotalPendingVerify,
+  overLayLoadingStatus,
+  loggedEmployeeCmpMagmntFun,
+  getCompanyDepartment,
+  getTheActulAssingedEmp,
+  getMobileAppCreditial,
+  getAssignedListOnly,
+  getRectifiedListForVerify,
+  getTotalOnProgressTicket
 });
 
 export default reducer;

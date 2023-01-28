@@ -13,7 +13,7 @@ export const DATA = [
         icon: 'center-focus-weak',
         iconColor: '#fffff9',
         avatarColor: '#e95827',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
     {
         id: 3,
@@ -21,7 +21,7 @@ export const DATA = [
         icon: 'enhanced-encryption',
         iconColor: '#fcffff',
         avatarColor: '#f49400',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
     {
         id: 4,
@@ -29,7 +29,7 @@ export const DATA = [
         icon: 'emoji-food-beverage',
         iconColor: '#f2fff3',
         avatarColor: '#10ad5f',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
     {
         id: 5,
@@ -37,7 +37,7 @@ export const DATA = [
         icon: 'headset-mic',
         iconColor: '#f2fff3',
         avatarColor: '#537186',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
     {
         id: 6,
@@ -45,7 +45,7 @@ export const DATA = [
         icon: 'account-tree',
         iconColor: '#fffff5',
         avatarColor: '#6f70ee',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
     {
         id: 7,
@@ -53,7 +53,7 @@ export const DATA = [
         icon: 'feedback',
         iconColor: '#fffcfd',
         avatarColor: '#0a7e88',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
     {
         id: 8,
@@ -61,7 +61,7 @@ export const DATA = [
         icon: 'wb-incandescent',
         iconColor: '#fcfdf7',
         avatarColor: '#f60381',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
     {
         id: 9,
@@ -69,6 +69,6 @@ export const DATA = [
         icon: 'speaker-notes',
         iconColor: '#fcfdf7',
         avatarColor: '#489428',
-        routeName: 'ComplaintRegister'
+        routeName: 'Profile'
     },
 ];

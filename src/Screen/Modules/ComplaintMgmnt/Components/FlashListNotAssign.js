@@ -1,10 +1,8 @@
 //import liraries
 import React, { memo } from 'react';
-import { RefreshControl, Text, View } from 'react-native';
+import { RefreshControl } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import CustomActivityIndicator from '../../../../Components/CustomActivityIndicator';
 import NotAssignedCard from './NotAssignedCard';
-import { windowHeight, windowWidth } from '../../../../utils/Dimentions';
 import NoNewTicketCmp from './NoNewTicketCmp';
 
 // create a component
@@ -18,12 +16,12 @@ const FlashListNotAssign = ({ notAssigned, setCount, refresh, count }) => {
             ListEmptyComponent={<NoNewTicketCmp legth={legth} />}
             showsVerticalScrollIndicator={false}
             keyExtractor={Assigned => Assigned.complaint_slno}
-            estimatedListSize={
-                {
-                    height: 300,
-                    width: windowWidth
-                }
-            }
+            // estimatedListSize={
+            //     {
+            //         height: 300,
+            //         width: windowWidth - 30
+            //     }
+            // }
             refreshControl={
                 <RefreshControl
                     refreshing={refresh}

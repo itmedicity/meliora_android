@@ -1,6 +1,5 @@
 //import liraries
 import React, {
-  Component,
   memo,
   useCallback,
   useEffect,
@@ -12,10 +11,8 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
-  Button,
   Alert,
   Platform,
-  TouchableOpacity,
 } from "react-native";
 import HeaderMain from "../../Components/HeaderMain";
 import { bgColor, fontColor } from "../../Constant/Colors";
@@ -39,14 +36,8 @@ import * as SplashScreen from "expo-splash-screen";
 
 //Notification imports
 import * as Notifications from "expo-notifications";
-import { axiosApi } from "../../config/Axiox";
 import { ActionType } from '../../Redux/Constants/action.type'
 import { useDispatch } from "react-redux";
-import { FlashList } from "@shopify/flash-list";
-import { windowHeight, windowWidth } from "../../utils/Dimentions";
-import Menus from "./Menus";
-import { ActivityIndicator, Avatar } from "react-native-paper";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AvatarMenu from "./AvatarMenu";
 
 SplashScreen.preventAutoHideAsync();

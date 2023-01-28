@@ -1,13 +1,26 @@
 //import liraries
-import React, { Component, memo, Suspense } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { lazy, memo, Suspense, useMemo, useState } from 'react';
+import { View, Text, ScrollView } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import { useSelector } from 'react-redux';
+import _ from 'underscore';
 import HearderSecondary from '../../../Components/HearderSecondary';
-import { bgColor, fontColor } from '../../../Constant/Colors';
+import { bgColor } from '../../../Constant/Colors';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 import { styles } from './Style/Style';
+
+const FlashListCmp = lazy(() => import('./Components/FlashListCmp'));
+const AssistanceCmp = lazy(() => import('./Components/AssistanceCmp'))
+
 // create a component
 const FlashListAssistance = ({ navigation }) => {
+
+    const [count, setCount] = useState(0)
+    const [refresh, setRefresh] = useState(false)
+
+    const assitanceTicket = useSelector((state) => state.getAssitanceListUserWise.assistanceList, _.isEqual);
+    const assitanceTickList = useMemo(() => assitanceTicket, [assitanceTicket]);
+
     return (
         <ScrollView style={styles.container}>
             {/* Header  */}
@@ -18,7 +31,7 @@ const FlashListAssistance = ({ navigation }) => {
             />
             <View style={styles.card} >
                 <View style={styles.cardHeader} >
-                    <Text style={styles.cardTitle} >Tickets</Text>
+                    <Text style={styles.cardTitle} >Assistance Needed Tickets</Text>
                 </View>
                 <View style={{
                     flex: 1,
@@ -26,12 +39,13 @@ const FlashListAssistance = ({ navigation }) => {
                     height: windowHeight >= 1200 ? windowHeight - 146 : windowHeight - 120
                 }} >
                     <Suspense fallback={<ActivityIndicator />} >
-                        {/* <FlashListNotAssign
-                                notAssigned={notAssigned}
-                                setCount={setCount}
-                                refresh={refresh}
-                                count={count}
-                            /> */}
+                        <FlashListCmp
+                            FlashRenderCmp={AssistanceCmp}
+                            Assigned={assitanceTickList}
+                            setCount={setCount}
+                            refresh={refresh}
+                            count={count}
+                        />
                     </Suspense>
                 </View>
                 <View style={{

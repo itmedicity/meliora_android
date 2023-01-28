@@ -14,6 +14,10 @@ const {
     FETCH_ALL_COMPLAINT_TODAY,
     FETCH_ONHOLD_COMPLAINT,
     FETCH_FOR_VERIFY_COMP,
+    FETCH_ACT_ASSIGN_EMP_LIST,
+    GET_ASSIGNED_LIST_ONLY,
+    GET_ASSIGNED_FOR_VERIFY_LIST,
+    FETCH_ON_PROGRESS_TICKET
 } = ActionType;
 
 const ticketCount = {
@@ -131,6 +135,20 @@ export const getOnholdComplaintList = (state = totalOnholdTicketList, { type, pa
     }
 }
 
+//for pending || ON PROGRESS WORK
+const totalOnProgressTicket = {
+    onProgressTotal: []
+}
+
+export const getTotalOnProgressTicket = (state = totalOnProgressTicket, { type, payload }) => {
+    switch (type) {
+        case FETCH_ON_PROGRESS_TICKET:
+            return { ...state, onProgressTotal: payload };
+        default:
+            return state;
+    }
+}
+
 //for getting the total pending verify list
 const verifyPending = {
     verifyPending: []
@@ -144,3 +162,52 @@ export const getTotalPendingVerify = (state = verifyPending, { type, payload }) 
             return state;
     }
 }
+
+//for getting the actual assigned employee against the assigned complaint
+
+const actialAssignedEmpList = {
+    actEmpList: []
+}
+
+
+export const getTheActulAssingedEmp = (state = actialAssignedEmpList, { type, payload }) => {
+    switch (type) {
+        case FETCH_ACT_ASSIGN_EMP_LIST:
+            return { ...state, actEmpList: payload };
+        default:
+            return state;
+    }
+}
+
+
+//GET THE ASSIGNED  ONLY
+const assignedInitialState = {
+    assignedList: [],
+    status: false
+}
+
+export const getAssignedListOnly = (state = assignedInitialState, { type, payload }) => {
+    switch (type) {
+        case GET_ASSIGNED_LIST_ONLY:
+            return { ...state, assignedList: payload, status: true };
+        default:
+            return state;
+    }
+}
+
+// GET THE ASSIGNED VERIFIED LIST ONLY FOR VERIFICATION PENDING
+
+const rectifiedListForVerify = {
+    rectifiedList: [],
+    status: false
+}
+
+export const getRectifiedListForVerify = (state = rectifiedListForVerify, { type, payload }) => {
+    switch (type) {
+        case GET_ASSIGNED_FOR_VERIFY_LIST:
+            return { ...state, rectifiedList: payload, status: true };
+        default:
+            return state;
+    }
+}
+

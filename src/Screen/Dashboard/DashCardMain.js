@@ -1,9 +1,8 @@
 //import liraries
-import React, { Component } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import { bgColor, fontColor } from '../../Constant/Colors';
-import { Avatar, Card, IconButton } from "react-native-paper";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Avatar, Card } from "react-native-paper";
 
 // create a component
 const DashCardMain = ({ Icon, mainTitle, subTitle, mainCount, subCount }) => {

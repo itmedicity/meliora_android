@@ -2,7 +2,6 @@
 import React, { memo } from 'react';
 import { RefreshControl, Text } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import CustomActivityIndicator from '../../../../Components/CustomActivityIndicator';
 import NoNewTicketCmp from './NoNewTicketCmp';
 import { windowWidth } from '../../../../utils/Dimentions';
 // import NotAssignedCard from './NotAssignedCard';

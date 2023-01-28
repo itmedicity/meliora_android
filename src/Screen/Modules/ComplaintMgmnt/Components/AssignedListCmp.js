@@ -1,37 +1,59 @@
 //import liraries
-import React, { memo } from 'react';
+import React, { memo, useState, lazy, Suspense, useCallback, useMemo, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { bgColor, fontColor } from '../../../../Constant/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Button } from 'react-native-paper'
 import { styles } from '../Style/Style';
+import { useDispatch } from 'react-redux'
+import { getTheActualEmployee } from '../../../../Redux/Actions/complaintMagmt.action';
+import _ from 'underscore';
 
+const RectifyModal = lazy(() => import('./RectifyModal'))
 // create a component
 const AssignedListCmp = ({ data }) => {
 
+    const dispatch = useDispatch();
+    const compDetlData = useMemo(() => data, [data])
     const {
         complaint_slno, //complaint slno
         compalint_date, //complaint date
-        complaint_dept_name, //complaint register department
         req_type_name, // request complaint type - complaint,new requirement , modification
         complaint_type_name, // comolaint type name hardware ,software ,etc
-        sec_name, // complaint register user section name
         location, // location name in detail
         comp_reg_emp, //  register employee name-complaint
         empdept, // registerd department 
         hic_policy_name,
-        priority,
         complaint_desc,
         compalint_priority,
-        compalint_status,
         assigned_date
-    } = data;
+    } = compDetlData;
+
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        return () => {
+            dispatch(getTheActualEmployee(0))
+        }
+    }, [getTheActualEmployee, dispatch])
+
+    const onRectifyModal = useCallback(async () => {
+        dispatch(getTheActualEmployee(complaint_slno))
+        setVisible(true)
+        // console.log(compalint_status)
+    }, [])
 
     return (
         <View style={styles.FLCP_container}>
+            <Suspense>
+                <RectifyModal
+                    visible={visible}
+                    setVisible={setVisible}
+                    data={compDetlData}
+                    onProgress={1}
+                />
+            </Suspense>
             <View style={{
                 marginHorizontal: 5
             }} >
@@ -171,49 +193,13 @@ const AssignedListCmp = ({ data }) => {
                         }
                         mode='elevated'
                         style={{
-                            borderRadius: 0,
-                            borderTopLeftRadius: 10,
-                            borderBottomLeftRadius: 10,
+                            borderRadius: 10,
+                            backgroundColor: '#F9FFF6'
                         }}
                         labelStyle={{ color: '#40a629' }}
+                        onPress={() => onRectifyModal()}
                     >
                         Rectify
-                    </Button>
-                </View>
-                <View style={{ flex: 1, }}>
-                    <Button
-                        icon={() => <MaterialIcons
-                            name='assignment-ind'
-                            size={21}
-                            style={{ color: '#40a629' }}
-                        />
-                        }
-                        // loading={true}
-                        mode='elevated'
-                        style={{ borderRadius: 0 }}
-                        labelStyle={{ color: '#40a629' }}
-                    >
-                        On Hold
-                    </Button>
-                </View>
-                <View style={{ flex: 1, }}>
-                    <Button
-                        icon={() => <Ionicons
-                            name='arrow-redo-sharp'
-                            color='#40a629'
-                            size={21}
-                        />
-                        }
-                        elevation={10}
-                        mode='elevated'
-                        style={{
-                            borderRadius: 0,
-                            borderTopEndRadius: 10,
-                            borderBottomRightRadius: 10
-                        }}
-                        labelStyle={{ color: '#40a629' }}
-                    >
-                        Pending
                     </Button>
                 </View>
             </View>

@@ -1,10 +1,7 @@
-import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import HomeScreen from "../Screen/Home/HomeScreen";
 import Profile from "../Screen/Profile/Profile";
-import Settings from "../Screen/Settings/Settings";
 import CustomDrawer from "../Components/CustomDrawer";
 import { MaterialIcons } from "@expo/vector-icons";
 const Drawer = createDrawerNavigator();
@@ -25,7 +22,6 @@ import {
   Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
 import { fontColor } from "../Constant/Colors";
-import TabNavigator from "./TabNavigator";
 import SettingStack from "./SettingStack";
 import HomeStack from "./HomeStack";
 import ComplaintRegister from "../Screen/Modules/ComplaintMgmnt/ComplaintRegister";

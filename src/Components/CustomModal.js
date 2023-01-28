@@ -1,5 +1,5 @@
 //import liraries
-import React, { Component } from "react";
+import React, { memo } from "react";
 import { View, Text, StyleSheet, Modal, Pressable } from "react-native";
 import { bgColor, buttonColor, fontColor } from "../Constant/Colors";
 
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
 });
 
 //make this component available to the app
-export default CustomModal;
+export default memo(CustomModal);

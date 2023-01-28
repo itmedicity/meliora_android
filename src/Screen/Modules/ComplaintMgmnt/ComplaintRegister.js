@@ -7,6 +7,8 @@ import { bgColor, fontColor } from '../../../Constant/Colors';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 import { useSelector, useDispatch } from 'react-redux'
 import { getAssignedTicketList, getAssistTicketList, getNotAssignedComplaintList } from '../../../Redux/Actions/complaintMagmt.action';
+import { getEmployeeDetlLoggedDeptWise } from '../../../Redux/Actions/common.action';
+import ApiGetFun from './func/ApiGetFun';
 
 const FlashListNotAssign = lazy(() => import('./Components/FlashListNotAssign'))
 const DashBoardView = lazy(() => import('./DashBoardView'))
@@ -15,7 +17,6 @@ const DashBoardView = lazy(() => import('./DashBoardView'))
 const ComplaintRegister = ({ navigation }) => {
 
     const dispatch = useDispatch();
-
     const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
     const notAssinedTickets = useSelector((state) => state.getNotAssignedCompList.notAssignedList, _.isEqual);
 
@@ -27,11 +28,13 @@ const ComplaintRegister = ({ navigation }) => {
     const [count, setCount] = useState(0)
 
     const [customHeight, setCustomHeight] = useState(0)
-
     //not asssigned list from database
     useEffect(() => {
+        dispatch(getEmployeeDetlLoggedDeptWise(emp_dept));
         dispatch(getNotAssignedComplaintList(emp_dept));
-        dispatch(getAssignedTicketList(emp_id));
+        dispatch(getAssignedTicketList(emp_id)); // assigned list includeded the rectified list
+        // dispatch(getTheAssignedListOnly(emp_id)); // assigened list only assigned list
+        // dispatch(getTheAssignedListForVerify(emp_id)) // rectified list only for verification list
         dispatch(getAssistTicketList(emp_id));
     }, [emp_dept, count, emp_id, dispatch])
 
@@ -47,6 +50,7 @@ const ComplaintRegister = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container} >
+            <ApiGetFun />
             {/* Header Component */}
             <HearderSecondary navigation={navigation} name="Complaint Register" goBackButton={true} />
             <ScrollView style={styles.scrollView} >
@@ -88,16 +92,10 @@ const ComplaintRegister = ({ navigation }) => {
                             ...styles.cardTitle,
                             fontFamily: 'Roboto_100Thin',
                             fontSize: 10,
-
                         }} >Pull Down To Refresh</Text>
                     </View>
                 </View>
             </ScrollView>
-            {/* {true &&
-                <View style={styles.loading}>
-                    <ActivityIndicator size='large' color='blue' />
-                </View>
-            } */}
         </SafeAreaView>
     );
 };
@@ -139,15 +137,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         overflow: 'hidden',
         color: fontColor.inActiveFont
-    },
-    loading: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        alignItems: 'center',
-        justifyContent: 'center'
     }
 });
 

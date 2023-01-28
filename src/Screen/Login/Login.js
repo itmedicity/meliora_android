@@ -1,12 +1,10 @@
 //import liraries
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
-  TextInput,
-  TouchableOpacity,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
@@ -17,7 +15,7 @@ import CustomButtonL1 from "../../Components/CustomButtonL1";
 import CustomTextInput from "../../Components/CustomTextInput";
 import CustomTextInputWithLabel from "../../Components/CustomTextInputWithLabel";
 import { axiosApi } from "../../config/Axiox";
-import { bgColor, fontColor } from "../../Constant/Colors";
+import { fontColor } from "../../Constant/Colors";
 import { useDispatch, useSelector } from "react-redux";
 
 import { ActionType } from "../../Redux/Constants/action.type";
@@ -63,7 +61,6 @@ const Login = () => {
       if (success === 1) {
         // console.log(result.data);
         const token = await JSON.stringify(result.data.token);
-        console.log(token)
         const userInfo = await JSON.stringify(result.data);
         AsyncStorage.setItem("@token:", token);
         AsyncStorage.setItem("@userInfo:", userInfo);

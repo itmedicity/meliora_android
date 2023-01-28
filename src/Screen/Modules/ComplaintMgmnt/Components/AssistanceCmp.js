@@ -1,100 +1,58 @@
 //import liraries
-import React, { memo, useState, lazy, Suspense, useCallback, useMemo } from 'react';
+import React, { memo, useState, lazy, Suspense, useCallback, useMemo, useEffect } from 'react';
 import { View, Text } from 'react-native';
 import { bgColor, fontColor } from '../../../../Constant/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Button } from 'react-native-paper'
 import { styles } from '../Style/Style';
+import { useDispatch } from 'react-redux'
+import { getTheActualEmployee } from '../../../../Redux/Actions/complaintMagmt.action';
 import _ from 'underscore';
-import { useSelector } from 'react-redux'
-import { format } from 'date-fns'
-import { axiosApi } from '../../../../config/Axiox';
 
-const CustmDIalog = lazy(() => import('./CustmDIalog'));
-const CmpTransfer = lazy(() => import('./CmpTransfer'))
+const RectifyModal = lazy(() => import('./RectifyModal'))
 
 // create a component
-const NotAssignedCard = ({ data, setCount }) => {
+const AssistanceCmp = ({ data }) => {
 
-    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
-    const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
-    const { emp_id, emp_dept } = loggedDetl;
-
-    //for assign modal
-    const [visible, setVisible] = useState(false);
-    //for transfer modal
-    const [trVisible, setTrVisible] = useState(false);
+    const dispatch = useDispatch();
+    const compDetlData = useMemo(() => data, [data])
 
     const {
         complaint_slno, //complaint slno
         compalint_date, //complaint date
-        complaint_dept_name, //complaint register department
         req_type_name, // request complaint type - complaint,new requirement , modification
         complaint_type_name, // comolaint type name hardware ,software ,etc
-        sec_name, // complaint register user section name
         location, // location name in detail
         comp_reg_emp, //  register employee name-complaint
         empdept, // registerd department 
         hic_policy_name,
-        priority,
         complaint_desc,
-        compalint_priority
-    } = data;
+        compalint_priority,
+        assist_assign_date
+    } = compDetlData;
 
-    const assignData = useMemo(() => data, [data]);
+    const [visible, setVisible] = useState(false);
 
-    const postData = {
-        complaint_slno: complaint_slno,
-        assigned_emp: emp_id,
-        assigned_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-        assign_rect_status: 0,
-        assigned_user: emp_id
-    }
-
-    //quick assign function
-    const quickAssignMent = useCallback(async () => {
-        const result = await axiosApi.post('/complaintassign', postData);
-        const { message, success } = result.data;
-        if (success === 1) {
-            alert(message)
-            setCount(complaint_slno)
-        } else if (success === 0) {
-            alert(message)
-        } else {
-            alert(message)
+    useEffect(() => {
+        return () => {
+            dispatch(getTheActualEmployee(0))
         }
+    }, [getTheActualEmployee, dispatch])
 
-    }, [postData])
-
-    // const quickAsign = useCallback(() => quickAssignMent, [quickAssignMent]);
-
-    // detailed assignment
-    const assign = useCallback(() => {
+    const onRectifyModal = useCallback(async () => {
+        dispatch(getTheActualEmployee(complaint_slno))
         setVisible(true)
-    })
+        // console.log(compalint_status)
+    }, [])
 
-    //complaint deparemnt transfer
-    const transferFun = useCallback(() => {
-        setTrVisible(true)
-    })
     return (
         <View style={styles.FLCP_container}>
             <Suspense>
-                <CustmDIalog
+                <RectifyModal
                     visible={visible}
                     setVisible={setVisible}
-                    data={assignData}
-                    user={emp_id}
-                    setCount={setCount}
-                />
-                <CmpTransfer
-                    visible={trVisible}
-                    setVisible={setTrVisible}
-                    slno={complaint_slno}
-                    setCount={setCount}
+                    data={compDetlData}
                 />
             </Suspense>
             <View style={{
@@ -211,6 +169,13 @@ const NotAssignedCard = ({ data, setCount }) => {
                     <Text style={styles.FLCP_headStyle}>ICRA Recommentation :</Text>
                     <Text style={styles.FLCP_cardTitle} >{hic_policy_name}</Text>
                 </View>
+                <View style={{
+                    // flex: 1,
+                    flexDirection: 'row'
+                }} >
+                    <Text style={styles.FLCP_headStyle}>Assigned Date :</Text>
+                    <Text style={styles.FLCP_cardTitle} >{assist_assign_date}</Text>
+                </View>
             </View>
             <View style={{
                 flexGrow: 1,
@@ -229,52 +194,13 @@ const NotAssignedCard = ({ data, setCount }) => {
                         }
                         mode='elevated'
                         style={{
-                            borderRadius: 0,
-                            borderTopLeftRadius: 10,
-                            borderBottomLeftRadius: 10,
+                            borderRadius: 10,
+                            backgroundColor: '#F9FFF6'
                         }}
                         labelStyle={{ color: '#40a629' }}
-                        onPress={() => quickAssignMent()}
+                        onPress={() => onRectifyModal()}
                     >
-                        Quick
-                    </Button>
-                </View>
-                <View style={{ flex: 1, }}>
-                    <Button
-                        icon={() => <MaterialIcons
-                            name='assignment-ind'
-                            size={21}
-                            style={{ color: '#40a629' }}
-                        />
-                        }
-                        // loading={true}
-                        mode='elevated'
-                        style={{ borderRadius: 0 }}
-                        labelStyle={{ color: '#40a629' }}
-                        onPress={() => assign()}
-                    >
-                        Assign
-                    </Button>
-                </View>
-                <View style={{ flex: 1, }}>
-                    <Button
-                        icon={() => <Ionicons
-                            name='arrow-redo-sharp'
-                            color='#40a629'
-                            size={21}
-                        />
-                        }
-                        elevation={10}
-                        mode='elevated'
-                        style={{
-                            borderRadius: 0,
-                            borderTopEndRadius: 10,
-                            borderBottomRightRadius: 10
-                        }}
-                        labelStyle={{ color: '#40a629' }}
-                        onPress={() => transferFun()}
-                    >
-                        Transfer
+                        Rectify
                     </Button>
                 </View>
             </View>
@@ -283,4 +209,4 @@ const NotAssignedCard = ({ data, setCount }) => {
 };
 
 //make this component available to the app
-export default memo(NotAssignedCard);
+export default memo(AssistanceCmp);

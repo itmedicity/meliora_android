@@ -1,7 +1,7 @@
 //import liraries
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
-import { bgColor, fontColor } from '../../Constant/Colors';
+import { fontColor } from '../../Constant/Colors';
 import { windowHeight } from '../../utils/Dimentions';
 
 // create a component
