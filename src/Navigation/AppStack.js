@@ -21,10 +21,24 @@ import {
   Roboto_900Black,
   Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
-import { fontColor } from "../Constant/Colors";
+import { colorTheme, fontColor } from "../Constant/Colors";
 import SettingStack from "./SettingStack";
 import HomeStack from "./HomeStack";
 import ComplaintRegister from "../Screen/Modules/ComplaintMgmnt/ComplaintRegister";
+import {
+  PencilSquareIcon,
+  CalendarDaysIcon,
+  ClipboardDocumentListIcon,
+  BellAlertIcon,
+  DeviceTabletIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+  ChatBubbleLeftEllipsisIcon,
+  BellIcon,
+  NewspaperIcon,
+  HomeIcon,
+  UserIcon,
+  Cog6ToothIcon
+} from 'react-native-heroicons/outline'
 
 // create a component
 const AppStack = () => {
@@ -42,18 +56,19 @@ const AppStack = () => {
     Roboto_900Black,
     Roboto_900Black_Italic,
   });
+
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawer {...props} />}
       useLegacyImplementation={true}
       screenOptions={{
         headerShown: false,
-        drawerActiveBackgroundColor: fontColor.mainBlue,
+        drawerActiveBackgroundColor: colorTheme.mainColor,
         drawerActiveTintColor: "#fff",
-        drawerInactiveTintColor: fontColor.mainBlue,
+        drawerInactiveTintColor: colorTheme.mainColor,
         drawerLabelStyle: {
           marginLeft: -25,
-          //   fontFamily: "Roboto_500Medium",
+          fontFamily: "Roboto_500Medium",
           fontSize: 15,
         },
       }}
@@ -63,7 +78,88 @@ const AppStack = () => {
         component={HomeStack}
         options={{
           drawerIcon: ({ color }) => (
-            <MaterialIcons name="home" size={22} color={color} />
+            <HomeIcon size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="New Ticket"
+        component={ComplaintRegister}
+        options={{
+          drawerIcon: ({ color }) => (
+            <PencilSquareIcon height={22} width={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="My Tasks"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <CalendarDaysIcon name="person" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="My Projects"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <ClipboardDocumentListIcon size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="My Attendance Info"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <DeviceTabletIcon size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Messages"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <ChatBubbleLeftEllipsisIcon size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Notifications"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <BellIcon size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Escalations"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <BellAlertIcon size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="News & Events"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <NewspaperIcon size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Chat"
+        component={Profile}
+        options={{
+          drawerIcon: ({ color }) => (
+            <ChatBubbleOvalLeftEllipsisIcon size={22} color={color} />
           ),
         }}
       />
@@ -72,16 +168,7 @@ const AppStack = () => {
         component={Profile}
         options={{
           drawerIcon: ({ color }) => (
-            <MaterialIcons name="person" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Complaint Register"
-        component={ComplaintRegister}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialIcons name="person" size={22} color={color} />
+            <UserIcon name="person" size={22} color={color} />
           ),
         }}
       />
@@ -90,7 +177,7 @@ const AppStack = () => {
         component={SettingStack}
         options={{
           drawerIcon: ({ color }) => (
-            <MaterialIcons name="settings" size={22} color={color} />
+            <Cog6ToothIcon size={22} color={color} />
           ),
         }}
       />

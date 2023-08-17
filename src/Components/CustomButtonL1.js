@@ -1,12 +1,12 @@
 //import liraries
 import React, { memo } from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import { fontColor } from "../Constant/Colors";
+import { colorTheme, fontColor } from "../Constant/Colors";
 
 // create a component
 const CustomButtonL1 = ({ label, buttonFuntion }) => {
   return (
-    <TouchableOpacity onPress={buttonFuntion} style={styles.LoginButton}>
+    <TouchableOpacity className='rounded-full' onPress={buttonFuntion} style={styles.LoginButton}>
       <Text style={styles.LoginButtonText}>{label}</Text>
     </TouchableOpacity>
   );
@@ -15,7 +15,7 @@ const CustomButtonL1 = ({ label, buttonFuntion }) => {
 // define your styles
 const styles = StyleSheet.create({
   LoginButton: {
-    backgroundColor: fontColor.mainBlue,
+    backgroundColor: colorTheme.mainColor,
     padding: 20,
     borderRadius: 10,
     marginBottom: 30,

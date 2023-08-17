@@ -5,7 +5,7 @@ import Profile from "../Screen/Profile/Profile";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { bgColor, iconColor } from "../Constant/Colors";
+import { bgColor, colorTheme, iconColor } from "../Constant/Colors";
 import SettingStack from "./SettingStack";
 import HomeScreen from "../Screen/Home/HomeScreen";
 import ChatStack from "./ChatStack";
@@ -21,10 +21,11 @@ const TabNavigator = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: bgColor.headerBar,
+          // backgroundColor: bgColor.headerBar,
+          backgroundColor: colorTheme.mainColor,
         },
         tabBarInactiveTintColor: "#fff",
-        tabBarActiveTintColor: iconColor.tabBarIconColor,
+        tabBarActiveTintColor: colorTheme.iconColor,
       }}
     >
       <Tab.Screen

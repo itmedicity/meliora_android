@@ -12,7 +12,7 @@ const CmpTransfer = ({ visible, setVisible, slno, setCount }) => {
 
     const dispatch = useDispatch();
 
-    const complaintDept = useSelector((state) => state.getCompanyDepartment, _.isEqual);
+    const complaintDept = useSelector((state) => state.commonFun.companyDepartment.cmpDept, _.isEqual);
     const comData = useMemo(() => complaintDept, [complaintDept]);
 
     const { cmpDept, status } = comData;
@@ -47,7 +47,7 @@ const CmpTransfer = ({ visible, setVisible, slno, setCount }) => {
 
     return (
         <Portal>
-            <Dialog visible={visible} onDismiss={hideDialog}>
+            <Dialog visible={visible} onDismiss={hideDialog} >
                 <Dialog.Title >
                     <Text variant='titleMedium' >Complaint Department</Text>
                 </Dialog.Title>

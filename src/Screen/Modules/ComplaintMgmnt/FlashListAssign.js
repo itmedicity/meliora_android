@@ -1,6 +1,6 @@
 //import liraries
 import React, { memo, Suspense, useEffect, useMemo, useState, lazy } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import HearderSecondary from '../../../Components/HearderSecondary';
 import { bgColor, fontColor } from '../../../Constant/Colors';
@@ -18,38 +18,26 @@ const FlashListAssign = ({ navigation }) => {
 
     const dispatch = useDispatch();
     // user logged information
-    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginInfo.loginDetl, _.isEqual);
     const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
     const { emp_id, emp_no, emp_dept } = loggedDetl;
 
     // get the assinned ticket list
     // const assignedList = useSelector((state) => state.getAssignedListUserWise.AssignedList, _.isEqual);
 
-    const assignedList = useSelector((state) => state.getAssignedListOnly.assignedList, _.isEqual);
-    // console.log(assigned)
+    const assignedList = useSelector((state) => state.complaint.AssignedListUserWise.AssignedList, _.isEqual);
+    // console.log(assignedList)
 
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
-
-    const [customHeight, setCustomHeight] = useState(0)
 
     useEffect(() => {
         // dispatch(getAssignedTicketList(emp_id));
         dispatch(getTheAssignedListOnly(emp_id))
     }, [emp_dept, count, emp_id, dispatch])
 
-    //screen height adjustment
-    useEffect(() => {
-        if (windowHeight > 750) {
-            setCustomHeight(windowHeight - 146)
-        } else if (windowHeight < 737 && windowHeight > 724) {
-            setCustomHeight(windowHeight - 120)
-        } else if (windowHeight < 700) {
-            setCustomHeight(windowHeight - 150)
-        }
-    }, [windowHeight])
     return (
-        <ScrollView style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <ApiGetFun />
             {/* Header  */}
             <HearderSecondary
@@ -64,7 +52,7 @@ const FlashListAssign = ({ navigation }) => {
                 <View style={{
                     flex: 1,
                     maxWidth: windowWidth,
-                    height: customHeight
+                    height: (windowHeight * 70 / 100)
                 }} >
                     <Suspense fallback={<ActivityIndicator />} >
                         <FlashListCmp
@@ -76,29 +64,28 @@ const FlashListAssign = ({ navigation }) => {
                         />
                     </Suspense>
                 </View>
-                <View style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: bgColor.cardBg,
-                    minHeight: 20
-                }} >
-                    <Text style={{
-                        ...styles.cardTitle,
-                        fontFamily: 'Roboto_100Thin',
-                        fontSize: 10,
-
-                    }} >Pull Down To Refresh</Text>
-                </View>
             </View>
-        </ScrollView>
+            <View style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: bgColor.cardBg,
+                minHeight: (windowHeight * 5 / 100)
+            }} >
+                <Text style={{
+                    ...styles.cardTitle,
+                    fontFamily: 'Roboto_100Thin',
+                    fontSize: 10,
+                }} >Pull Down To Refresh</Text>
+            </View>
+        </SafeAreaView>
     );
 };
 
 // define your styles
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: bgColor.mainBgColor,
-        flex: 1,
+        backgroundColor: bgColor.cardBg,
+        height: windowHeight
     },
     scrollView: {
         padding: 8,
@@ -116,7 +103,7 @@ const styles = StyleSheet.create({
     cardHeader: {
         backgroundColor: bgColor.cardBg,
         // backgroundColor: "powderblue",
-        minHeight: 30,
+        minHeight: (windowHeight * 3 / 100),
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 5,

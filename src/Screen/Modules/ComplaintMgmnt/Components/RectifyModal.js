@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import { format } from 'date-fns';
 import { axiosApi } from '../../../../config/Axiox';
 import ApiGetFun from '../func/ApiGetFun';
+import { selectLoginInform } from '../../../../Redux/ReduxSlice/LoginSLice';
 // create a component
 const RectifyModal = ({ visible, setVisible, data, hold, onProgress }) => {
 
@@ -24,11 +25,11 @@ const RectifyModal = ({ visible, setVisible, data, hold, onProgress }) => {
     const [checked, setChecked] = useState({});
     const [checkVal, setCheck] = useState({})
 
-    const assingnedData = useSelector((state) => state.getTheActulAssingedEmp.actEmpList, _.isEqual)
+    const assingnedData = useSelector((state) => state.complaint.actialAssignedEmpList.actEmpList, _.isEqual)
     const empListData = useMemo(() => assingnedData, [assingnedData]);
 
     // user logged information
-    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const loggedEmpDetl = useSelector(selectLoginInform);
     const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
     const { emp_id } = loggedDetl;
 

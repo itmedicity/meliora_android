@@ -12,7 +12,8 @@ const FlashListOnHold = lazy(() => import('../Screen/Modules/ComplaintMgmnt/Flas
 const FlashListVerify = lazy(() => import('../Screen/Modules/ComplaintMgmnt/FlashListVerify'))
 const FlashListCompleted = lazy(() => import('../Screen/Modules/ComplaintMgmnt/FlashListCompleted'))
 const Profile = lazy(() => import("../Screen/Profile/Profile"))
-
+const DetailedAssignModal = lazy(() => import("../Screen/Modules/ComplaintMgmnt/Components/DetailedAssignModal"))
+const FalshlistNotAssign = lazy(() => import("../Screen/Modules/ComplaintMgmnt/FlashListNotAssigns"))
 
 // create a component
 const HomeStack = () => {
@@ -34,6 +35,12 @@ const HomeStack = () => {
         <Stack.Screen name="Verify" component={FlashListVerify} />
         <Stack.Screen name="Completed" component={FlashListCompleted} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="notAssign" component={FalshlistNotAssign} />
+        <Stack.Screen
+          name="AssignCompDetl"
+          component={DetailedAssignModal}
+          options={{ presentation: 'modal' }}
+        />
       </Stack.Navigator>
     </Suspense>
   );

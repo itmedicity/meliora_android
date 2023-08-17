@@ -7,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { fontColor } from "../Constant/Colors";
+import { colorTheme } from "../Constant/Colors";
 
 // create a component
 const CustomTextInputWithLabel = ({
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   forgetText: {
-    color: fontColor.mainBlue,
+    color: colorTheme.mainColor,
     fontWeight: "700",
   },
   textInput: {

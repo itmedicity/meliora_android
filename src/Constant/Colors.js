@@ -23,3 +23,19 @@ export const iconColor = {
   main: "#fff",
   tabBarIconColor: "#F7A800",
 };
+
+export const colorTheme = {
+  iconSelectionColor: '#f48806',
+  mainColor: '#454762',
+  secondaryMain: "#373c53",
+  mainBgColor: "#f0f1f5",
+  secondaryBgColor: "#e4e3e3",
+  iconColor: '#f48806',
+  SecondfontColor: '#86888f',
+  deptColor1: "#3697fa",
+  deptColor2: "#75d86e",
+  deptColor3: "#a7e4a3",
+  deptColor4: "#d1fafe",
+  deptColor5: "#46cdf5",
+  deptColor6: "#40b9f7"
+}

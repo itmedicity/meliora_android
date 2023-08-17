@@ -1,12 +1,13 @@
 //import liraries
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
-import { fontColor } from '../../../Constant/Colors';
+import { colorTheme, fontColor } from '../../../Constant/Colors';
 import { windowHeight } from '../../../utils/Dimentions';
+import { MegaphoneIcon } from 'react-native-heroicons/outline'
 // create a component
-const DashCountTile = ({ navigation, name, count, id }) => {
+const DashCountTile = ({ navigation, name, count, id, escalated }) => {
     //dashboard api call count    
-    const dashCountUpdation = () => {
+    const dashCountUpdation = useCallback(() => {
         if (id === 2) {
             navigation.navigate('AssignList')
         } else if (id === 3) {
@@ -17,19 +18,35 @@ const DashCountTile = ({ navigation, name, count, id }) => {
             navigation.navigate('Verify')
         } else if (id === 6) {
             navigation.navigate('Completed')
+        } else if (id === 1) {
+            navigation.navigate('notAssign')
         }
-    }
+    }, [navigation])
 
     return (
         <TouchableNativeFeedback
             onPress={() => dashCountUpdation()}
         >
-            <View style={styles.mainTile} >
-                <View style={styles.innerCountTile}>
-                    <Text style={styles.innerCountTileFont}>{count}</Text>
+            <View style={styles.mainTile} className="flex-col" >
+                <View className='flex flex-1 p-2 pb-0 flex-row'  >
+                    <View className='flex-1 basis-1/3' >
+                        <Text
+                            className='text-white'
+                            style={{ fontFamily: 'Roboto_500Medium' }}
+                        >{name}</Text>
+                    </View>
+                    <View className='flex-1 justify-center items-center' >
+                        <Text
+                            className='flex text-4xl text-white'
+                        >{count}</Text>
+                    </View>
                 </View>
-                <View style={styles.innerTextTile}>
-                    <Text style={styles.innerTextTileFont} >{name}</Text>
+                <View className='flex flex-row h-7 pb-2 pl-2 items-center content-center'>
+                    <MegaphoneIcon className='flex self-baseline' color={colorTheme.iconColor} height={15} width={15} />
+                    <Text className='flex pl-1'
+                        style={{ fontFamily: 'Roboto_300Light', color: colorTheme.iconColor }} >Escalated</Text>
+                    <Text className='flex pl-3 font-bold'
+                        style={{ fontFamily: 'Roboto_300Light', color: colorTheme.iconColor }} >{escalated}</Text>
                 </View>
             </View>
         </TouchableNativeFeedback>
@@ -40,14 +57,14 @@ const DashCountTile = ({ navigation, name, count, id }) => {
 const styles = StyleSheet.create({
     mainTile: {
         flex: 1,
-        height: windowHeight < 750 ? 80 : 110,
-        minWidth: windowHeight < 750 ? 80 : 124,
-        maxWidth: windowHeight < 750 ? 80 : 124,
+        height: (windowHeight * 12 / 100),
+        minWidth: (windowHeight * 23 / 100),
+        maxWidth: (windowHeight * 23 / 100),
         borderWidth: 0.1,
-        borderRadius: 10,
-        borderColor: '#5392f7',
+        borderRadius: 18,
+        borderColor: colorTheme.mainColor,
         overflow: 'hidden',
-        backgroundColor: '#5392f7',
+        backgroundColor: colorTheme.mainColor,
         elevation: 3,
         shadowOpacity: 10,
         shadowRadius: 30,
@@ -68,7 +85,7 @@ const styles = StyleSheet.create({
     innerTextTile: {
         flex: 3,
         paddingHorizontal: 6,
-        backgroundColor: '#d9e2e6',
+        backgroundColor: colorTheme.deptColor5,
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
         borderBottomEndRadius: 10,

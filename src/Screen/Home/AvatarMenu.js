@@ -2,9 +2,9 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { windowWidth } from '../../utils/Dimentions';
-import { Avatar } from 'react-native-paper'
+import { Avatar, FAB } from 'react-native-paper'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { bgColor, fontColor } from '../../Constant/Colors';
+import { bgColor, colorTheme, fontColor } from '../../Constant/Colors';
 
 // create a component
 const AvatarMenu = ({ navigation, mainTitle, icon, iconColor, avatarColor, routeName }) => {
@@ -52,8 +52,10 @@ const AvatarMenu = ({ navigation, mainTitle, icon, iconColor, avatarColor, route
                         name={icon}
                         size={windowWidth < 400 ? 30 : 32}
                         color={iconColor}
+                    // color="gray"
                     />}
                     style={{ backgroundColor: avatarColor }}
+                    className="drop-shadow-2xl shadow-gray-700"
                 />
                 <View style={{
                     // backgroundColor: 'white'
@@ -61,7 +63,7 @@ const AvatarMenu = ({ navigation, mainTitle, icon, iconColor, avatarColor, route
                     <View style={{
                         justifyContent: 'center',
                         alignItems: 'center'
-                    }} >
+                    }} className="drop-shadow-2xl shadow-lg ">
                         <Text style={styles.textStyle} >{mainTitle}</Text>
                         <Text style={styles.textStyle} >Management</Text>
                     </View>
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto_500Medium",
         fontSize: 10,
         fontWeight: '400',
-        color: bgColor.statusbar
+        color: colorTheme.SecondfontColor
     },
 });
 

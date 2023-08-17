@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 import { bgColor, fontColor } from "../../../../Constant/Colors";
-import { windowWidth } from "../../../../utils/Dimentions";
+import { windowHeight, windowWidth } from "../../../../utils/Dimentions";
 
 export const styles = StyleSheet.create({
     container: {
         backgroundColor: bgColor.mainBgColor,
-        flex: 1,
+        height: windowHeight
     },
     scrollView: {
         padding: 8,
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     cardHeader: {
         backgroundColor: bgColor.cardBg,
         // backgroundColor: "powderblue",
-        minHeight: 30,
+        Height: (windowHeight * 3 / 100),//30
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 5,

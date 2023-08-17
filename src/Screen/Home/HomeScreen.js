@@ -13,9 +13,10 @@ import {
   ScrollView,
   Alert,
   Platform,
+  Button,
 } from "react-native";
 import HeaderMain from "../../Components/HeaderMain";
-import { bgColor, fontColor } from "../../Constant/Colors";
+import { bgColor, colorTheme, fontColor } from "../../Constant/Colors";
 import {
   useFonts,
   Roboto_100Thin,
@@ -45,14 +46,15 @@ SplashScreen.preventAutoHideAsync();
 Notifications.setNotificationHandler({
   handleNotification: async () => {
     return {
-      shouldPlaySound: false,
-      shouldSetBadge: false,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
       shouldShowAlert: true,
     };
   },
 });
 
 import { DATA } from "./func/HomeFunc";
+import MyTicketDash from "../Modules/ComplaintMgmnt/Components/MyTicketDash";
 
 // create a component
 const HomeScreen = ({ navigation }) => {
@@ -90,7 +92,10 @@ const HomeScreen = ({ navigation }) => {
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
           name: "default",
-          importance: Notifications.AndroidImportance.DEFAULT,
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: "#FF231F7C",
+          sound: './assets/notification-sound.wav',
         });
       }
     };
@@ -157,18 +162,22 @@ const HomeScreen = ({ navigation }) => {
     return null;
   }
 
-  const scheduleNotificationHandler = async () => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "this is my first notification",
-        body: "This is the message body",
-        data: { userName: "Ajith" },
-      },
-      trigger: {
-        seconds: 5,
-      },
-    });
-  };
+  // const scheduleNotificationHandler = async () => {
+  //   await Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "this is my first notification",
+  //       body: "This is the message body",
+  //       subtitle: 'New Ticket Registerd',
+  //       badge: 3,
+  //       color: '#d5fc5c',
+  //       vibrationPattern: [0, 250, 250, 250],
+  //       data: { userName: "Ajith" },
+  //     },
+  //     trigger: {
+  //       seconds: 1,
+  //     },
+  //   });
+  // };
 
   // const sendPushNotification = async (expoPushToken) => {
   //   // console.log(expoPushToken);
@@ -201,46 +210,34 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
       {/* Header Component */}
       <HeaderMain navigation={navigation} name="Meliora" />
-      <ScrollView>
-        <View style={styles.textCard} >
-          <Text style={styles.textCardFont} >Modules Selection</Text>
-        </View>
-        <View style={styles.menuContainer} >
-
+      <View className="flex" >
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          fadingEdgeLength={10}
+          className="flex"
+        >
           {
             DATA.map((val) => {
               return <AvatarMenu
                 mainTitle={val.title}
                 icon={val.icon}
-                iconColor={val.iconColor}
-                avatarColor={val.avatarColor}
+                iconColor={colorTheme.iconColor}
+                avatarColor={colorTheme.secondaryBgColor}
                 key={val.id}
                 navigation={navigation}
                 routeName={val.routeName}
               />
             })
           }
+        </ScrollView>
 
-          {/* {
-            loding === true ?
-              <ActivityIndicator
-                size={25}
-                animating={true}
-                color={bgColor.headerBar}
-                style={{
-                  flex: 1
-                }}
-              /> :
-              <FlashList
-                data={DATA}
-                renderItem={({ item }) => <Menus item={item} navigation={navigation} />}
-                estimatedItemSize={10}
-                numColumns={windowWidth < 400 ? 3 : 6}
-                refreshing={true}
-              />
-          } */}
+        <View className="flex" >
+          <View className="flex p-2" >
+            <MyTicketDash />
+          </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -248,8 +245,8 @@ const HomeScreen = ({ navigation }) => {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: bgColor.mainBgColor,
-    flex: 1,
+    backgroundColor: colorTheme.mainBgColor,
+    flex: 1
   },
   textCardFont: {
     fontFamily: 'Roboto_500Medium',
@@ -258,13 +255,9 @@ const styles = StyleSheet.create({
     color: fontColor.inActiveFont
   },
   menuContainer: {
-    // flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 4,
-    // backgroundColor: 'green'
-    // minHeight: windowHeight,
-    // maxHeight: windowHeight,
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // padding: 4,
   },
   textStyle: {
     fontFamily: "Roboto_500Medium",

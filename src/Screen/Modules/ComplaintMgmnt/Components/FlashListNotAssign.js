@@ -6,12 +6,17 @@ import NotAssignedCard from './NotAssignedCard';
 import NoNewTicketCmp from './NoNewTicketCmp';
 
 // create a component
-const FlashListNotAssign = ({ notAssigned, setCount, refresh, count }) => {
+const FlashListNotAssign = ({ notAssigned, setCount, refresh, count, modalOpenFun }) => {
     const legth = Object.keys(notAssigned).length;
     return (
         <FlashList
             data={notAssigned}
-            renderItem={({ item }) => <NotAssignedCard data={item} setCount={setCount} />}
+            renderItem={({ item }) =>
+                <NotAssignedCard
+                    data={item}
+                    setCount={setCount}
+                    modalOpen={modalOpenFun}
+                />}
             estimatedItemSize={legth || 5}
             ListEmptyComponent={<NoNewTicketCmp legth={legth} />}
             showsVerticalScrollIndicator={false}

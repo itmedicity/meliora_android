@@ -7,21 +7,22 @@ import {
     StatusBar,
     TouchableOpacity,
 } from "react-native";
-import { bgColor, fontColor, iconColor } from "../Constant/Colors";
+import { colorTheme } from "../Constant/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
-import { windowWidth } from "../utils/Dimentions";
+import { windowHeight, windowWidth } from "../utils/Dimentions";
+import { HomeIcon, ArrowUturnLeftIcon } from "react-native-heroicons/outline"
 // create a component
 const HearderSecondary = ({ navigation, name, goBackButton }) => {
     return (
         <View>
             <StatusBar
                 animated={false}
-                backgroundColor={bgColor.statusbar}
-                barStyle="default"
+                backgroundColor={colorTheme.mainBgColor}
+                barStyle="dark-content"
             />
             <View style={styles.headerStyleCmp}>
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                    <MaterialIcons name="reorder" size={25} color={iconColor.main} />
+                    <MaterialIcons name="reorder" size={25} color={colorTheme.mainColor} />
                 </TouchableOpacity>
                 <View style={{
                     display: 'flex',
@@ -35,10 +36,10 @@ const HearderSecondary = ({ navigation, name, goBackButton }) => {
                 {
                     goBackButton === true ?
                         <TouchableOpacity onPress={() => navigation.navigate('HomeStack')}>
-                            <MaterialIcons name="home" size={25} color={iconColor.main} />
+                            <HomeIcon size={25} color={colorTheme.mainColor} />
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <MaterialIcons name="reply" size={25} color={iconColor.main} />
+                            <ArrowUturnLeftIcon size={25} color={colorTheme.mainColor} />
                         </TouchableOpacity>
                 }
             </View>
@@ -55,15 +56,15 @@ const styles = StyleSheet.create({
     headerStyleCmp: {
         flexDirection: "row",
         justifyContent: "space-between",
-        height: 70,
-        backgroundColor: bgColor.headerBar,
-        padding: 20,
+        height: (windowHeight * 8 / 100),
+        backgroundColor: colorTheme.mainBgColor,
+        padding: 15,
         alignItems: "center",
     },
     userName: {
         fontSize: windowWidth < 400 ? 15 : 20,
         fontFamily: "Roboto_500Medium",
-        color: fontColor.main,
+        color: colorTheme.mainColor,
         textTransform: 'capitalize'
     },
 });

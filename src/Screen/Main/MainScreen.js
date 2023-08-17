@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
@@ -28,7 +29,7 @@ import * as Font from "expo-font";
 // import logo from "./assets/SvgIcon.png";
 // import logo from "../../../assets/SvgIcon.png";
 import SvgLogo from "../../../assets/tmcsvg.svg";
-import { bgColor, buttonColor, fontColor } from "../../Constant/Colors";
+import { bgColor, buttonColor, colorTheme, fontColor } from "../../Constant/Colors";
 
 // import SvgLogo from "./src/Components/Svg/SVGComponent";
 // Keep the splash screen visible while we fetch resources
@@ -89,6 +90,11 @@ const MainScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
+      <StatusBar
+        animated={true}
+        backgroundColor={colorTheme.mainBgColor}
+        barStyle='dark-content'
+      />
       <View>
         <Text style={styles.textStyle}>Meliora</Text>
       </View>
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: bgColor.mainBgColor,
+    backgroundColor: colorTheme.mainBgColor,
     paddingTop: 24,
   },
   textStyle: {
@@ -128,10 +134,10 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   TouchButton: {
-    backgroundColor: buttonColor.main,
+    backgroundColor: colorTheme.mainColor,
     padding: 20,
     width: "90%",
-    borderRadius: 5,
+    borderRadius: 35,
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 50,

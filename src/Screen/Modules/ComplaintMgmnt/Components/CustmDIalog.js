@@ -6,6 +6,7 @@ import { Dialog, Portal, Text, Button, TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import _ from 'underscore';
 import { axiosApi } from '../../../../config/Axiox';
+import { selectLoginInform } from '../../../../Redux/ReduxSlice/LoginSLice';
 import CusSwitchCmp from './CusSwitchCmp';
 // create a component
 const CustmDIalog = ({ visible, setVisible, data, user, setCount }) => {
@@ -30,13 +31,17 @@ const CustmDIalog = ({ visible, setVisible, data, user, setCount }) => {
     const [filterEmpDetl, setA] = useState([])
     const [remark, setRemark] = useState("")
 
-    const empDetl = useSelector((state) => state.loggedEmployeeCmpMagmntFun.empDetl, _.isEqual);
+    const empDetl = useSelector(selectLoginInform);
     const empLoggedEmpDetl = useMemo(() => empDetl, [empDetl]);
 
     useEffect(() => {
-        const array = empLoggedEmpDetl.map((val) => {
-            return { id: val.em_id, name: val.em_name, status: false }
-        })
+        // const array = empLoggedEmpDetl?.map((val) => {
+        //     return { id: val.em_id, name: val.em_name, status: false }
+        // })
+        const array = [];
+
+        //empLoggedEmpDetl && empLoggedEmpDetl
+
         setEmpArray(array)
         setA([...array])
     }, [empLoggedEmpDetl])

@@ -4,26 +4,35 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import { bgColor, fontColor, iconColor } from "../Constant/Colors";
+import { colorTheme, } from "../Constant/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
-
+import { PowerIcon } from 'react-native-heroicons/solid'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { clearLoggedInformation } from "../Redux/ReduxSlice/LoginSLice";
 // create a component
 const HeaderMain = ({ navigation, name }) => {
+  const dispatch = useDispatch();
+
+  const logOut = async () => {
+    //CLEAR THE LOGIN INFORMATION
+    dispatch(clearLoggedInformation());
+    AsyncStorage.clear();
+  };
 
   return (
     <View>
       <StatusBar
         animated={false}
-        backgroundColor={bgColor.statusbar}
-        barStyle="default"
+        backgroundColor={colorTheme.mainBgColor}
+        barStyle='dark-content'
       />
       <View style={styles.headerStyleCmp}>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <MaterialIcons name="reorder" size={25} color={iconColor.main} />
+          <MaterialIcons name="reorder" size={25} color={colorTheme.mainColor} />
         </TouchableOpacity>
         <View style={{
           display: 'flex',
@@ -34,12 +43,8 @@ const HeaderMain = ({ navigation, name }) => {
           {/* <Text>Login as : </Text> */}
           <Text style={styles.userName}>{name}</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <ImageBackground
-            source={require("../../assets/images/image3.jpg")}
-            style={styles.imageBgCmp}
-            imageStyle={{ borderRadius: 10 }}
-          />
+        <TouchableOpacity onPress={logOut}>
+          <PowerIcon color={colorTheme.mainColor} height={25} width={25} />
         </TouchableOpacity>
       </View>
     </View>
@@ -56,14 +61,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     height: 70,
-    backgroundColor: bgColor.headerBar,
+    backgroundColor: colorTheme.mainBgColor,
     padding: 20,
     alignItems: "center",
   },
   userName: {
     fontSize: 20,
     fontFamily: "Roboto_500Medium",
-    color: fontColor.main,
+    color: colorTheme.mainColor,
     textTransform: 'capitalize'
   },
 });

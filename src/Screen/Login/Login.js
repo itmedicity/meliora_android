@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
+  StatusBar,
 } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
@@ -15,26 +16,26 @@ import CustomButtonL1 from "../../Components/CustomButtonL1";
 import CustomTextInput from "../../Components/CustomTextInput";
 import CustomTextInputWithLabel from "../../Components/CustomTextInputWithLabel";
 import { axiosApi } from "../../config/Axiox";
-import { fontColor } from "../../Constant/Colors";
-import { useDispatch, useSelector } from "react-redux";
+import { colorTheme } from "../../Constant/Colors";
+import { useDispatch } from "react-redux";
 
-import { ActionType } from "../../Redux/Constants/action.type";
 import CustomModal from "../../Components/CustomModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { loggedInfomration } from "../../Redux/ReduxSlice/LoginSLice"
+import OverLayLoading from "../Modules/ComplaintMgmnt/Components/OverLayLoading";
+
 // create a component
 const Login = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const { FETCH_LOGIN_INFORMATION } = ActionType;
   const dispatch = useDispatch();
 
-  const state = useSelector((state) => state);
-  // console.log(state);
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [useCode, setUserCode] = useState("");
   const [passCode, setPassCode] = useState("");
   const [errorMesg, setErrorMesg] = useState(false);
+
+  const [loading, setLoading] = useState(false)
 
   const IternalServerErr = () => {
     return (
@@ -48,6 +49,7 @@ const Login = () => {
   };
 
   const onSubmitFun = async (useCode, passCode) => {
+    setLoading(true)
     try {
       setErrorMesg(false);
       const loginCred = {
@@ -56,27 +58,19 @@ const Login = () => {
       };
 
       const result = await axiosApi.post("/employee/login", loginCred);
-      // console.log(result)
       const { success } = result.data;
       if (success === 1) {
-        // console.log(result.data);
         const token = await JSON.stringify(result.data.token);
         const userInfo = await JSON.stringify(result.data);
         AsyncStorage.setItem("@token:", token);
         AsyncStorage.setItem("@userInfo:", userInfo);
-
-        dispatch({
-          type: FETCH_LOGIN_INFORMATION,
-          payload: {
-            token: result.data.token,
-            data: result.data,
-            loadingStatus: false,
-            message: "Login Successfull",
-          },
-        });
+        // dispatch the login info 
+        dispatch(loggedInfomration(result.data))
+        setLoading(false)
       } else {
         setModalMessage("User Code Or Passcode is Wrong !!");
         setModalVisible(true);
+        setLoading(false)
       }
     } catch (error) {
       console.log(error);
@@ -86,6 +80,12 @@ const Login = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar
+        animated={true}
+        backgroundColor={colorTheme.mainBgColor}
+        barStyle='dark-content'
+      />
+      {loading && <OverLayLoading />}
       <ScrollView style={styles.rapperView} keyboardShouldPersistTaps="always">
         <CustomModal
           setModal={setModalVisible}
@@ -111,7 +111,7 @@ const Login = () => {
                 <MaterialIcons
                   name="perm-identity"
                   size={20}
-                  color={fontColor.mainBlue}
+                  color={colorTheme.mainColor}
                   style={{ marginRight: 5 }}
                 />
               }
@@ -127,7 +127,7 @@ const Login = () => {
                 <MaterialIcons
                   name="lock-outline"
                   size={20}
-                  color={fontColor.mainBlue}
+                  color={colorTheme.mainColor}
                   style={{ marginRight: 5 }}
                 />
               }
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: "Roboto_500Medium",
     fontSize: 28,
-    color: fontColor.mainBlue,
+    color: colorTheme.mainColor,
     marginBottom: 30,
   },
   rapperView: {
@@ -180,13 +180,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "900",
     fontSize: 10,
-    color: fontColor.mainBlue,
+    color: colorTheme.mainColor,
   },
   ErrorText: {
     textAlign: "center",
     fontWeight: "900",
     fontSize: 12,
-    color: fontColor.errorText,
+    color: colorTheme.mainColor,
   },
 });
 

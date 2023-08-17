@@ -17,7 +17,7 @@ const DashBoardView = ({ navigation }) => {
     const [forVerify, setForVerify] = useState(0)
     const [completed, setCompleted] = useState(0)
 
-    const ticketCount = useSelector((state) => state.getTicketCount, _.isEqual);
+    const ticketCount = useSelector((state) => state.complaint.ticketCount, _.isEqual);
     const tickCounts = useMemo(() => ticketCount, [ticketCount]);
 
     useEffect(() => {
@@ -39,12 +39,12 @@ const DashBoardView = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             style={styles.dbvContainer}
         >
-            <DashCountTile navigation={navigation} id={1} name='New Ticket' count={newTicket} />
-            <DashCountTile navigation={navigation} id={2} name='Assigned' count={assigned} />
-            <DashCountTile navigation={navigation} id={3} name='Assistance' count={assit} />
-            <DashCountTile navigation={navigation} id={4} name='OnHold' count={onHold} />
-            <DashCountTile navigation={navigation} id={5} name='For Verify' count={forVerify} />
-            <DashCountTile navigation={navigation} id={6} name='On Progress' count={completed} />
+            <DashCountTile navigation={navigation} escalated={0} id={1} name='New Ticket' count={newTicket} />
+            <DashCountTile navigation={navigation} escalated={0} id={2} name='Assigned' count={assigned} />
+            <DashCountTile navigation={navigation} escalated={0} id={3} name='Assistance' count={assit} />
+            <DashCountTile navigation={navigation} escalated={0} id={4} name='OnHold' count={onHold} />
+            <DashCountTile navigation={navigation} escalated={0} id={5} name='For Verify' count={forVerify} />
+            <DashCountTile navigation={navigation} escalated={0} id={6} name='On Progress' count={completed} />
         </ScrollView>
     );
 };

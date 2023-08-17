@@ -1,5 +1,5 @@
 //import liraries
-import React, { memo, useState, lazy, Suspense, useCallback, useMemo } from 'react';
+import React, { memo, useState, lazy, Suspense, useCallback, useMemo, useRef } from 'react';
 import { View, Text } from 'react-native';
 import { bgColor, fontColor } from '../../../../Constant/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -12,16 +12,19 @@ import _ from 'underscore';
 import { useSelector } from 'react-redux'
 import { format } from 'date-fns'
 import { axiosApi } from '../../../../config/Axiox';
+import { useNavigation } from '@react-navigation/native';
 
 const CustmDIalog = lazy(() => import('./CustmDIalog'));
-const CmpTransfer = lazy(() => import('./CmpTransfer'))
+const CmpTransfer = lazy(() => import('./CmpTransfer'));
 
 // create a component
-const NotAssignedCard = ({ data, setCount }) => {
+const NotAssignedCard = ({ data, setCount, modalOpen }) => {
 
-    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginInfo.loginDetl, _.isEqual);
     const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
-    const { emp_id, emp_dept } = loggedDetl;
+    const { emp_id, supervisor } = loggedDetl;
+
+    const navigation = useNavigation();
 
     //for assign modal
     const [visible, setVisible] = useState(false);
@@ -51,7 +54,8 @@ const NotAssignedCard = ({ data, setCount }) => {
         assigned_emp: emp_id,
         assigned_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
         assign_rect_status: 0,
-        assigned_user: emp_id
+        assigned_user: emp_id,
+        assign_status: 1
     }
 
     //quick assign function
@@ -73,17 +77,22 @@ const NotAssignedCard = ({ data, setCount }) => {
 
     // detailed assignment
     const assign = useCallback(() => {
-        setVisible(true)
-    })
+        // setVisible(true)
+        modalOpen(assignData)
+    }, [assignData])
 
     //complaint deparemnt transfer
     const transferFun = useCallback(() => {
         setTrVisible(true)
     })
+
+
+
     return (
+
         <View style={styles.FLCP_container}>
             <Suspense>
-                <CustmDIalog
+                {/* <CustmDIalog
                     visible={visible}
                     setVisible={setVisible}
                     data={assignData}
@@ -95,7 +104,7 @@ const NotAssignedCard = ({ data, setCount }) => {
                     setVisible={setTrVisible}
                     slno={complaint_slno}
                     setCount={setCount}
-                />
+                /> */}
             </Suspense>
             <View style={{
                 marginHorizontal: 5
@@ -239,23 +248,26 @@ const NotAssignedCard = ({ data, setCount }) => {
                         Quick
                     </Button>
                 </View>
-                <View style={{ flex: 1, }}>
-                    <Button
-                        icon={() => <MaterialIcons
-                            name='assignment-ind'
-                            size={21}
-                            style={{ color: '#40a629' }}
-                        />
-                        }
-                        // loading={true}
-                        mode='elevated'
-                        style={{ borderRadius: 0 }}
-                        labelStyle={{ color: '#40a629' }}
-                        onPress={() => assign()}
-                    >
-                        Assign
-                    </Button>
-                </View>
+                {
+                    supervisor === 1 ?
+                        <View style={{ flex: 1, }}>
+                            <Button
+                                icon={() => <MaterialIcons
+                                    name='assignment-ind'
+                                    size={21}
+                                    style={{ color: '#40a629' }}
+                                />
+                                }
+                                // loading={true}
+                                mode='elevated'
+                                style={{ borderRadius: 0 }}
+                                labelStyle={{ color: '#40a629' }}
+                                onPress={assign}
+                            >
+                                Assign
+                            </Button>
+                        </View> : null
+                }
                 <View style={{ flex: 1, }}>
                     <Button
                         icon={() => <Ionicons
