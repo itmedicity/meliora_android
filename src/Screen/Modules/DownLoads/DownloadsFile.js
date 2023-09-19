@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, TouchableOpacity, Platform } from 'react-native'
+import { View, Text, StatusBar, TouchableOpacity, Platform, Alert } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { FontAwesome } from '@expo/vector-icons';
 import { CloudArrowDownIcon, XCircleIcon } from 'react-native-heroicons/solid'
@@ -33,8 +33,9 @@ const DownloadsFile = () => {
                 setApkFileName(data?.[0]?.apk_app_filename)
                 setApkLink(data?.[0]?.apk_app_link)
                 setDisable(false)
+            } else {
+                Alert.alert("Error Getting Apk Link")
             }
-            // console.log(data)
         }
         getDownloadApi()
     }, [disable])
