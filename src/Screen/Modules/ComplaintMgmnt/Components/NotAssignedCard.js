@@ -1,7 +1,7 @@
 //import liraries
 import React, { memo, useState, lazy, Suspense, useCallback, useMemo, useRef } from 'react';
-import { View, Text } from 'react-native';
-import { bgColor, fontColor } from '../../../../Constant/Colors';
+import { View, Text, Alert } from 'react-native';
+import { bgColor, colorTheme, fontColor } from '../../../../Constant/Colors';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -13,12 +13,20 @@ import { useSelector } from 'react-redux'
 import { format } from 'date-fns'
 import { axiosApi } from '../../../../config/Axiox';
 import { useNavigation } from '@react-navigation/native';
+import Modal from 'react-native-modal'
+import AlertModal from './Modals/AlertModal';
+import TicketAssignModal from './Modals/TicketAssignModal';
+import BaseModal from '../../../../Components/BaseModal';
+import ComplainDeptTransfer from './Modals/ComplainDeptTransfer';
 
 const CustmDIalog = lazy(() => import('./CustmDIalog'));
 const CmpTransfer = lazy(() => import('./CmpTransfer'));
 
+
 // create a component
-const NotAssignedCard = ({ data, setCount, modalOpen }) => {
+const NotAssignedCard = ({ data, setCount }) => {
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginInfo.loginDetl, _.isEqual);
     const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
@@ -32,19 +40,17 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
     const [trVisible, setTrVisible] = useState(false);
 
     const {
-        complaint_slno, //complaint slno
-        compalint_date, //complaint date
-        complaint_dept_name, //complaint register department
-        req_type_name, // request complaint type - complaint,new requirement , modification
-        complaint_type_name, // comolaint type name hardware ,software ,etc
-        sec_name, // complaint register user section name
-        location, // location name in detail
-        comp_reg_emp, //  register employee name-complaint
-        empdept, // registerd department 
-        hic_policy_name,
-        priority,
+        compalint_date,
         complaint_desc,
-        compalint_priority
+        complaint_hicslno,
+        complaint_slno,
+        complaint_type_name,
+        create_employee,
+        dept_sec,
+        location,
+        priority_check,
+        priority_reason,
+        req_type_name
     } = data;
 
     const assignData = useMemo(() => data, [data]);
@@ -63,12 +69,16 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
         const result = await axiosApi.post('/complaintassign', postData);
         const { message, success } = result.data;
         if (success === 1) {
-            alert(message)
             setCount(complaint_slno)
+            setModalVisible(true)
         } else if (success === 0) {
-            alert(message)
+            Alert.alert('Caution !!', message, [
+                { text: 'OK' },
+            ]);
         } else {
-            alert(message)
+            Alert.alert('Caution !!', message, [
+                { text: 'OK' },
+            ]);
         }
 
     }, [postData])
@@ -77,20 +87,41 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
 
     // detailed assignment
     const assign = useCallback(() => {
-        // setVisible(true)
-        modalOpen(assignData)
+        setVisible(true)
     }, [assignData])
 
     //complaint deparemnt transfer
     const transferFun = useCallback(() => {
+        // navigation.navigate('AssignCompDetl')
+        // setModalVisible(true)
         setTrVisible(true)
     })
 
-
-
     return (
-
-        <View style={styles.FLCP_container}>
+        <View style={{
+            ...styles.FLCP_container,
+            // backgroundColor: complaint_hicslno === 1 ? colorTheme.deptColor4 : colorTheme.secondaryBgColor,
+            marginVertical: 1,
+        }}>
+            <AlertModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+            />
+            <TicketAssignModal
+                openModelState={setVisible}
+                openState={visible}
+                data={data}
+            />
+            {/* <BaseModal
+                openModelState={setTrVisible}
+                openState={trVisible}
+                height={80}
+            /> */}
+            <ComplainDeptTransfer
+                openModelState={setTrVisible}
+                openState={trVisible}
+                data={data}
+            />
             <Suspense>
                 {/* <CustmDIalog
                     visible={visible}
@@ -98,8 +129,8 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                     data={assignData}
                     user={emp_id}
                     setCount={setCount}
-                />
-                <CmpTransfer
+                /> */}
+                {/* <CmpTransfer
                     visible={trVisible}
                     setVisible={setTrVisible}
                     slno={complaint_slno}
@@ -109,6 +140,17 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
             <View style={{
                 marginHorizontal: 5
             }} >
+
+                {/* icra recommention warniong */}
+
+                {complaint_hicslno === 1 && <View className='flex-1' >
+                    <Text
+                        style={{ fontFamily: 'Roboto_900Black', color: colorTheme.iconColor }}
+                        className='text-[11px] text-center' >Infection Control Risk Assessment (ICRA) Recommended</Text>
+
+                </View>
+                }
+
                 {/* name and department section */}
                 <View style={{
                     flexDirection: 'row',
@@ -119,26 +161,52 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                         alignContent: 'center',
                         alignItems: 'center'
                     }} >
-                        <Text style={styles.FLCP_captionStyle} >{comp_reg_emp}</Text>
+                        <Text style={styles.FLCP_captionStyle} >{create_employee}</Text>
                         <Text style={{ color: bgColor.statusbar }}>@</Text>
-                        <Text style={{ ...styles.FLCP_captionStyle, fontStyle: 'italic' }} >{empdept}</Text>
+                        <Text style={{ ...styles.FLCP_captionStyle, fontStyle: 'italic' }} >{dept_sec}</Text>
                     </View>
                     <View style={{
                         flexDirection: 'row',
                         alignContent: 'center',
                         alignItems: 'center'
-                    }} >
-                        {/* <Text style={{ ...styles.cardTitle, fontStyle: 'italic' }} >{priority}</Text> */}
-                        <MaterialCommunityIcons
-                            name='alarm-light'
-                            color={
-                                compalint_priority === 0 ? 'green' :
-                                    compalint_priority === 1 ? 'red' : 'orange'
-                            }
-                            size={15}
-                        />
+                    }} className='animate-spin' >
+                        {
+                            priority_check === 1 ?
+                                <MaterialCommunityIcons
+                                    name='alarm-light'
+                                    color="red"
+                                    size={15}
+                                /> : null
+                        }
                     </View>
                 </View>
+
+                {/* Priority Reason */}
+
+                {
+                    priority_check === 1 &&
+                    <View>
+                        <View style={{
+                            flexGrow: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                        }}
+                        >
+                            <View style={{
+                                flexGrow: 1,
+                                flexDirection: 'row',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start',
+                            }} >
+                                <Text style={{ ...styles.FLCP_headStyle }} >Priority Reason :</Text>
+                                <Text style={{ ...styles.FLCP_cardTitle, color: colorTheme.iconColor, }} >{priority_reason}</Text>
+                            </View>
+                        </View>
+                    </View>
+                }
+
+
                 {/* register time and numeber section */}
                 <View>
                     <View style={{
@@ -213,13 +281,13 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                     <Text style={styles.FLCP_headStyle}>Location :</Text>
                     <Text style={styles.FLCP_cardTitle} >{location}</Text>
                 </View>
-                <View style={{
+                {/* <View style={{
                     // flex: 1,
                     flexDirection: 'row'
                 }} >
                     <Text style={styles.FLCP_headStyle}>ICRA Recommentation :</Text>
                     <Text style={styles.FLCP_cardTitle} >{hic_policy_name}</Text>
-                </View>
+                </View> */}
             </View>
             <View style={{
                 flexGrow: 1,
@@ -232,7 +300,7 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                     <Button
                         icon={() => <AntDesign
                             name='rightcircle'
-                            color='#40a629'
+                            color={colorTheme.secondaryBgColor}
                             size={20}
                         />
                         }
@@ -241,8 +309,11 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                             borderRadius: 0,
                             borderTopLeftRadius: 10,
                             borderBottomLeftRadius: 10,
+                            backgroundColor: colorTheme.mainColor,
+                            borderWidth: 0.5,
+                            borderColor: 'white',
                         }}
-                        labelStyle={{ color: '#40a629' }}
+                        labelStyle={{ color: colorTheme.secondaryBgColor }}
                         onPress={() => quickAssignMent()}
                     >
                         Quick
@@ -255,13 +326,18 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                                 icon={() => <MaterialIcons
                                     name='assignment-ind'
                                     size={21}
-                                    style={{ color: '#40a629' }}
+                                    style={{ color: colorTheme.secondaryBgColor }}
                                 />
                                 }
                                 // loading={true}
                                 mode='elevated'
-                                style={{ borderRadius: 0 }}
-                                labelStyle={{ color: '#40a629' }}
+                                style={{
+                                    borderRadius: 0,
+                                    backgroundColor: colorTheme.mainColor,
+                                    borderWidth: 0.5,
+                                    borderColor: 'white'
+                                }}
+                                labelStyle={{ color: colorTheme.secondaryBgColor }}
                                 onPress={assign}
                             >
                                 Assign
@@ -272,7 +348,7 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                     <Button
                         icon={() => <Ionicons
                             name='arrow-redo-sharp'
-                            color='#40a629'
+                            color={colorTheme.secondaryBgColor}
                             size={21}
                         />
                         }
@@ -281,9 +357,12 @@ const NotAssignedCard = ({ data, setCount, modalOpen }) => {
                         style={{
                             borderRadius: 0,
                             borderTopEndRadius: 10,
-                            borderBottomRightRadius: 10
+                            borderBottomRightRadius: 10,
+                            backgroundColor: colorTheme.mainColor,
+                            borderColor: 'white',
+                            borderWidth: 0.5
                         }}
-                        labelStyle={{ color: '#40a629' }}
+                        labelStyle={{ color: colorTheme.secondaryBgColor }}
                         onPress={() => transferFun()}
                     >
                         Transfer

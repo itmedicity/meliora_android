@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { bgColor, fontColor } from "../../../../Constant/Colors";
+import { bgColor, colorTheme, fontColor } from "../../../../Constant/Colors";
 import { windowHeight, windowWidth } from "../../../../utils/Dimentions";
 
 export const styles = StyleSheet.create({
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     },
     card: {
         flex: 1,
-        backgroundColor: 'powderblue',
+        backgroundColor: colorTheme.bgGreyWhite,
         borderRadius: 5,
         overflow: 'hidden'
     },

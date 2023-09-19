@@ -1,15 +1,19 @@
 //import liraries
-import React, { memo, Suspense, useEffect, useMemo, useState, lazy } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import React, { memo, Suspense, useEffect, useMemo, useState, lazy, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, KeyboardAvoidingView } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import HearderSecondary from '../../../Components/HearderSecondary';
-import { bgColor, fontColor } from '../../../Constant/Colors';
+import { bgColor, colorTheme, fontColor } from '../../../Constant/Colors';
 import { getTheAssignedListOnly } from '../../../Redux/Actions/complaintMagmt.action';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 import { useDispatch, useSelector } from 'react-redux'
 import _ from 'underscore';
 import FlashListCmp from './Components/FlashListCmp';
 import ApiGetFun from './func/ApiGetFun';
+import { getLogiEmployeeID } from '../../../Redux/ReduxSlice/LoginSLice';
+import { assignedListUserWise, getAssignListEmp } from '../../../Redux/ReduxSlice/ticketMagmntSlice';
+import OverLayLoading from './Components/OverLayLoading';
+// import { assignedListUserWise, getAssignedTicketList } from '../../../Redux/ReduxSlice/complaintMagmntSlice';
 
 const AssignedListCmp = lazy(() => import('./Components/AssignedListCmp'))
 
@@ -17,67 +21,69 @@ const AssignedListCmp = lazy(() => import('./Components/AssignedListCmp'))
 const FlashListAssign = ({ navigation }) => {
 
     const dispatch = useDispatch();
+    const [loding, setLoading] = useState(true)
+
     // user logged information
-    const loggedEmpDetl = useSelector((state) => state.loginFuntion.loginInfo.loginDetl, _.isEqual);
-    const loggedDetl = useMemo(() => loggedEmpDetl, [loggedEmpDetl]);
-    const { emp_id, emp_no, emp_dept } = loggedDetl;
+    const empId = useSelector(getLogiEmployeeID);
+    const emId = useMemo(() => empId, [empId])
 
-    // get the assinned ticket list
-    // const assignedList = useSelector((state) => state.getAssignedListUserWise.AssignedList, _.isEqual);
+    useEffect(() => {
+        dispatch(getAssignListEmp(emId))
+    }, [emId])
 
-    const assignedList = useSelector((state) => state.complaint.AssignedListUserWise.AssignedList, _.isEqual);
-    // console.log(assignedList)
+    const assignedList = useSelector(assignedListUserWise)
+    const newAssignList = useMemo(() => assignedList, [assignedList])
 
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
 
-    useEffect(() => {
-        // dispatch(getAssignedTicketList(emp_id));
-        dispatch(getTheAssignedListOnly(emp_id))
-    }, [emp_dept, count, emp_id, dispatch])
-
     return (
-        <SafeAreaView style={styles.container}>
-            <ApiGetFun />
-            {/* Header  */}
-            <HearderSecondary
-                navigation={navigation}
-                name="Assigned List"
-                goBackButton={false}
-            />
-            <View style={styles.card} >
-                <View style={styles.cardHeader} >
-                    <Text style={styles.cardTitle} >Assigned Tickets</Text>
+        <KeyboardAvoidingView enabled behavior='height' >
+            <SafeAreaView style={styles.container} >
+                {/* Header  */}
+                <HearderSecondary
+                    navigation={navigation}
+                    name="Assigned Tickets"
+                    goBackButton={false}
+                />
+                <View style={styles.card} >
+                    {loding && <OverLayLoading />}
+                    <View style={{
+                        flex: 1,
+                        maxWidth: windowWidth,
+                        height: (windowHeight * 70 / 100)
+                    }} >
+                        <Suspense fallback={<ActivityIndicator />} >
+                            <FlashListCmp
+                                FlashRenderCmp={AssignedListCmp}
+                                Assigned={newAssignList}
+                                setCount={useCallback(() => setCount, [setCount])}
+                                refresh={refresh}
+                                count={count}
+                                setLoading={setLoading}
+                            />
+                        </Suspense>
+                    </View>
                 </View>
                 <View style={{
-                    flex: 1,
-                    maxWidth: windowWidth,
-                    height: (windowHeight * 70 / 100)
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: colorTheme.mainBgColor,
+                    // minHeight: (windowHeight * 5 / 100)
                 }} >
-                    <Suspense fallback={<ActivityIndicator />} >
-                        <FlashListCmp
-                            FlashRenderCmp={AssignedListCmp}
-                            Assigned={assignedList}
-                            setCount={setCount}
-                            refresh={refresh}
-                            count={count}
-                        />
-                    </Suspense>
+                    <Text style={{
+                        fontFamily: 'Roboto_500Medium',
+                        fontSize: windowWidth > 400 ? 14 : 12,
+                        paddingHorizontal: 5,
+                        overflow: 'hidden',
+                        color: colorTheme.mainColor,
+                        fontFamily: 'Roboto_100Thin',
+                        fontSize: 10,
+                    }} >Pull Down To Refresh</Text>
                 </View>
-            </View>
-            <View style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: bgColor.cardBg,
-                minHeight: (windowHeight * 5 / 100)
-            }} >
-                <Text style={{
-                    ...styles.cardTitle,
-                    fontFamily: 'Roboto_100Thin',
-                    fontSize: 10,
-                }} >Pull Down To Refresh</Text>
-            </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 };
 

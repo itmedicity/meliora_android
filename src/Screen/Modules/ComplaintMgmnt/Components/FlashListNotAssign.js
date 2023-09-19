@@ -6,19 +6,19 @@ import NotAssignedCard from './NotAssignedCard';
 import NoNewTicketCmp from './NoNewTicketCmp';
 
 // create a component
-const FlashListNotAssign = ({ notAssigned, setCount, refresh, count, modalOpenFun }) => {
+const FlashListNotAssign = ({ notAssigned, setCount, refresh, count, setLoading }) => {
     const legth = Object.keys(notAssigned).length;
     return (
         <FlashList
             data={notAssigned}
+            keyboardShouldPersistTaps='always'
             renderItem={({ item }) =>
                 <NotAssignedCard
                     data={item}
                     setCount={setCount}
-                    modalOpen={modalOpenFun}
                 />}
             estimatedItemSize={legth || 5}
-            ListEmptyComponent={<NoNewTicketCmp legth={legth} />}
+            // ListEmptyComponent={<NoNewTicketCmp legth={legth} />}
             showsVerticalScrollIndicator={false}
             keyExtractor={Assigned => Assigned.complaint_slno}
             // estimatedListSize={
@@ -27,6 +27,7 @@ const FlashListNotAssign = ({ notAssigned, setCount, refresh, count, modalOpenFu
             //         width: windowWidth - 30
             //     }
             // }
+            onLoad={() => setLoading(false)}
             refreshControl={
                 <RefreshControl
                     refreshing={refresh}

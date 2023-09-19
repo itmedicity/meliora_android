@@ -21,23 +21,24 @@ import {
   Roboto_900Black,
   Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
-import { colorTheme, fontColor } from "../Constant/Colors";
+import { colorTheme } from "../Constant/Colors";
 import SettingStack from "./SettingStack";
 import HomeStack from "./HomeStack";
-import ComplaintRegister from "../Screen/Modules/ComplaintMgmnt/ComplaintRegister";
+import NewTickets from "../Screen/Modules/ComplaintMgmnt/NewTickets";
+import DownloadsFile from "../Screen/Modules/DownLoads/DownloadsFile";
 import {
   PencilSquareIcon,
   CalendarDaysIcon,
   ClipboardDocumentListIcon,
   BellAlertIcon,
   DeviceTabletIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
   ChatBubbleLeftEllipsisIcon,
   BellIcon,
   NewspaperIcon,
   HomeIcon,
   UserIcon,
-  Cog6ToothIcon
+  Cog6ToothIcon,
+  CloudArrowDownIcon
 } from 'react-native-heroicons/outline'
 
 // create a component
@@ -84,7 +85,7 @@ const AppStack = () => {
       />
       <Drawer.Screen
         name="New Ticket"
-        component={ComplaintRegister}
+        component={NewTickets}
         options={{
           drawerIcon: ({ color }) => (
             <PencilSquareIcon height={22} width={22} color={color} />
@@ -155,11 +156,11 @@ const AppStack = () => {
         }}
       />
       <Drawer.Screen
-        name="Chat"
-        component={Profile}
+        name="Downloads"
+        component={DownloadsFile}
         options={{
           drawerIcon: ({ color }) => (
-            <ChatBubbleOvalLeftEllipsisIcon size={22} color={color} />
+            <CloudArrowDownIcon size={22} color={color} />
           ),
         }}
       />

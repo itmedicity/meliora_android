@@ -4,7 +4,7 @@ import { axiosApi } from '../../config/Axiox';
 //GET THE NOT ASSIGNED COMPLAINTS LIST -- All tickets not assigned
 
 const getNotAssignedComplaintList = createAsyncThunk('api/getNotAssignedComplaintList', (id) => {
-    return axiosApi.get(`/mobileapp/notassigncomplaints/${id}`)
+    return axiosApi.get(`/mobileapp/notassigncomplaints/deptBased/${id}`)
         .then((response) => {
             return response.data;
         })
@@ -64,6 +64,13 @@ const getCompleteListEmp = createAsyncThunk('api/getCompleteListEmp', (id) => {
         })
 })
 
+//GE THE ACTUAL ASSIGNED EMPLOYEE AGAINST THE COMPLAINT
+const getActualTicketAssingedEmp = createAsyncThunk('api/getActualTicketAssingedEmp', (id) => {
+    return axiosApi.get(`/Rectifycomplit/getAssignEmps/${id}`)
+        .then((response) => {
+            return response.data;
+        })
+})
 
 const initialState = {
     notAssignedCompList: {
@@ -103,6 +110,11 @@ const initialState = {
     },
     completeList: {
         data: [],
+        status: 0,
+        message: ""
+    },
+    assignedEmplyee: {
+        employee: [],
         status: 0,
         message: ""
     }
@@ -218,11 +230,37 @@ const ticketMagmentEmpSlice = createSlice({
                 state.completeList.message = "Success"
                 state.completeList.data = payload
             })
+            .addCase(getActualTicketAssingedEmp.pending, (state) => {
+                state.assignedEmplyee.status = 0
+                state.assignedEmplyee.message = "Pending"
+            })
+            .addCase(getActualTicketAssingedEmp.rejected, (state) => {
+                state.assignedEmplyee.status = 2
+                state.assignedEmplyee.message = "Error"
+            })
+            .addCase(getActualTicketAssingedEmp.fulfilled, (state, { payload }) => {
+                state.assignedEmplyee.status = 1
+                state.assignedEmplyee.message = "Success"
+                state.assignedEmplyee.employee = payload
+            })
     }
 })
 
 export const getTicketCount = state => state.ticketUser.ticketCount.data.data?.[0];
+export const getNotAssignedCount = state => state.ticketUser.notAssignedCompList.data.data?.length;
+export const getNotAssignedList = state => state.ticketUser.notAssignedCompList.data.data;
+export const getTicketActualEmp = state => state.ticketUser.assignedEmplyee.employee;
+export const assignedListUserWise = state => state.ticketUser.assignList?.data?.data;
+export const assistListUserWise = state => state.ticketUser.assistList.data?.data;
+export const getOnholdCompList = state => state.ticketUser.onHoldList.data?.data;
+export const getOnVerifyList = state => state.ticketUser.forVerifyList.data?.data;
+export const getOnProgressList = state => state.ticketUser.onProgressList.data?.data;
 
+export const getEmpWiseTicket = (state) => {
+    const newTickCount = state.ticketUser.notAssignedCompList.data.data?.length;
+    let Obj = [{ "countype": "NT", "total": newTickCount }];
+    return Obj
+}
 
 export {
     getNotAssignedComplaintList,
@@ -232,7 +270,8 @@ export {
     getOnHoldListEmp,
     getOnProgressListEmp,
     getforVerifyListEmp,
-    getCompleteListEmp
+    getCompleteListEmp,
+    getActualTicketAssingedEmp
 }
 
 export default ticketMagmentEmpSlice.reducer

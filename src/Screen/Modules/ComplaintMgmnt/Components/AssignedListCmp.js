@@ -1,19 +1,21 @@
 //import liraries
 import React, { memo, useState, lazy, Suspense, useCallback, useMemo, useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { bgColor, fontColor } from '../../../../Constant/Colors';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import { Button } from 'react-native-paper'
+import { View, Text, Pressable } from 'react-native';
+import { bgColor, colorTheme, fontColor } from '../../../../Constant/Colors';
 import { styles } from '../Style/Style';
 import { useDispatch } from 'react-redux'
 import { getTheActualEmployee } from '../../../../Redux/Actions/complaintMagmt.action';
-import _ from 'underscore';
+import { getDayDiffrenceIncludeTheTime, getTimeDiffrenceForLiveClock } from '../func/UtilityFun';
+import LiveCmpTimeDiffrenceClock from './Modals/LiveCmpTimeDiffrenceClock';
+import RectifyTicketModal from './Modals/RectifyTicketModal';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import MutlilineTextInput from '../../../../Components/MutlilineTextInput';
+import { getActualTicketAssingedEmp } from '../../../../Redux/ReduxSlice/ticketMagmntSlice';
 
-const RectifyModal = lazy(() => import('./RectifyModal'))
 // create a component
 const AssignedListCmp = ({ data }) => {
 
+    const [openState, openModelState] = useState('')
     const dispatch = useDispatch();
     const compDetlData = useMemo(() => data, [data])
     const {
@@ -27,36 +29,43 @@ const AssignedListCmp = ({ data }) => {
         hic_policy_name,
         complaint_desc,
         compalint_priority,
-        assigned_date
+        priority_check,
+        complaint_hicslno,
+        assigned_date,
+        create_employee,
+        sec_name
     } = compDetlData;
 
-    const [visible, setVisible] = useState(false);
+    //LIVE CLOCK FUNCTIONS
+    const newDates = getTimeDiffrenceForLiveClock(compalint_date);
+    const dayDiffrence = getDayDiffrenceIncludeTheTime(compalint_date);
 
-    useEffect(() => {
-        return () => {
-            dispatch(getTheActualEmployee(0))
-        }
-    }, [getTheActualEmployee, dispatch])
+    const cmpNewDate = useMemo(() => newDates, [newDates]);
+    const newDayDiffrence = useMemo(() => dayDiffrence, [dayDiffrence])
 
     const onRectifyModal = useCallback(async () => {
-        dispatch(getTheActualEmployee(complaint_slno))
-        setVisible(true)
-        // console.log(compalint_status)
-    }, [])
+        // dispatch(getTheActualEmployee(complaint_slno))
+        dispatch(getActualTicketAssingedEmp(complaint_slno))
+        openModelState(!openState)
+    }, [complaint_slno])
 
     return (
-        <View style={styles.FLCP_container}>
+        <View style={{ ...styles.FLCP_container, borderRadius: 10, borderWidth: 0.2, borderColor: colorTheme.switchTrack, marginHorizontal: 5, marginVertical: 2 }}>
+            <RectifyTicketModal
+                openState={openState}
+                openModelState={openModelState}
+                data={complaint_slno}
+            />
+
             <Suspense>
-                <RectifyModal
+                {/* <RectifyModal
                     visible={visible}
                     setVisible={setVisible}
                     data={compDetlData}
                     onProgress={1}
-                />
+                /> */}
             </Suspense>
-            <View style={{
-                marginHorizontal: 5
-            }} >
+            <View style={{ marginHorizontal: 5 }} >
                 {/* name and department section */}
                 <View style={{
                     flexDirection: 'row',
@@ -67,24 +76,22 @@ const AssignedListCmp = ({ data }) => {
                         alignContent: 'center',
                         alignItems: 'center'
                     }} >
-                        <Text style={styles.FLCP_captionStyle} >{comp_reg_emp}</Text>
+                        <Text style={styles.FLCP_captionStyle} >{create_employee}</Text>
                         <Text style={{ color: bgColor.statusbar }}>@</Text>
-                        <Text style={{ ...styles.FLCP_captionStyle, fontStyle: 'italic' }} >{empdept}</Text>
+                        <Text style={{ ...styles.FLCP_captionStyle, fontStyle: 'italic' }} >{sec_name}</Text>
                     </View>
-                    <View style={{
+                    <View className='flex grow' style={{
                         flexDirection: 'row',
                         alignContent: 'center',
-                        alignItems: 'center'
+                        justifyContent: 'flex-end',
+
                     }} >
-                        {/* <Text style={{ ...styles.cardTitle, fontStyle: 'italic' }} >{priority}</Text> */}
-                        <MaterialCommunityIcons
-                            name='alarm-light'
-                            color={
-                                compalint_priority === 0 ? 'green' :
-                                    compalint_priority === 1 ? 'red' : 'orange'
-                            }
-                            size={15}
-                        />
+                        {
+                            compalint_priority === 1 && <View className='flex justify-center px-2 rounded-md' style={{ borderWidth: 0.2, borderColor: 'red' }} >
+                                <Text style={{ fontFamily: 'Roboto_500Medium', fontSize: 12 }}
+                                    className='antialiased text-red-600'>Priority ticket</Text>
+                            </View>
+                        }
                     </View>
                 </View>
                 {/* register time and numeber section */}
@@ -161,13 +168,16 @@ const AssignedListCmp = ({ data }) => {
                     <Text style={styles.FLCP_headStyle}>Location :</Text>
                     <Text style={styles.FLCP_cardTitle} >{location}</Text>
                 </View>
-                <View style={{
-                    // flex: 1,
-                    flexDirection: 'row'
-                }} >
-                    <Text style={styles.FLCP_headStyle}>ICRA Recommentation :</Text>
-                    <Text style={styles.FLCP_cardTitle} >{hic_policy_name}</Text>
-                </View>
+                {
+                    complaint_hicslno === 1 &&
+                    <View style={{
+                        // flex: 1,
+                        flexDirection: 'row'
+                    }} >
+                        <Text style={styles.FLCP_headStyle}>ICRA Recommentation :</Text>
+                        <Text style={styles.FLCP_cardTitle} >{hic_policy_name}</Text>
+                    </View>
+                }
                 <View style={{
                     // flex: 1,
                     flexDirection: 'row'
@@ -175,35 +185,27 @@ const AssignedListCmp = ({ data }) => {
                     <Text style={styles.FLCP_headStyle}>Assigned Date :</Text>
                     <Text style={styles.FLCP_cardTitle} >{assigned_date}</Text>
                 </View>
-            </View>
-            <View style={{
-                flexGrow: 1,
-                flexDirection: 'row',
-                paddingHorizontal: 6,
-                justifyContent: 'space-between',
-                marginVertical: 5
-            }} >
-                <View style={{ flex: 1 }} >
-                    <Button
-                        icon={() => <AntDesign
-                            name='rightcircle'
-                            color='#40a629'
-                            size={20}
+                {/* display the live complant time diffrence  */}
+                <View className='flex ' style={{ borderWidth: 0, borderRadius: 0, justifyContent: 'center', alignItems: 'center', marginVertical: 5, marginHorizontal: 60 }} >
+                    <View className='flex' >
+                        <LiveCmpTimeDiffrenceClock
+                            dayDiffrence={newDayDiffrence}
+                            newDates={cmpNewDate}
                         />
-                        }
-                        mode='elevated'
-                        style={{
-                            borderRadius: 10,
-                            backgroundColor: '#F9FFF6'
-                        }}
-                        labelStyle={{ color: '#40a629' }}
-                        onPress={() => onRectifyModal()}
-                    >
-                        Rectify
-                    </Button>
+                    </View>
                 </View>
             </View>
+            <View className='pb-1' >
+                <Pressable
+                    onPress={onRectifyModal}
+                    className='flex'
+                    style={{ borderWidth: 0.3, borderRadius: 10, marginHorizontal: 25, height: 30, justifyContent: 'center', backgroundColor: colorTheme.switchTrack }}
+                >
+                    <Text className='text-center text-white'>Rectify tickets</Text>
+                </Pressable>
+            </View>
         </View>
+
     );
 };
 

@@ -5,11 +5,14 @@ import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import _ from 'underscore';
 import HearderSecondary from '../../../Components/HearderSecondary';
-import { bgColor } from '../../../Constant/Colors';
+import { bgColor, colorTheme } from '../../../Constant/Colors';
+import { getOnProgressList } from '../../../Redux/ReduxSlice/ticketMagmntSlice';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
-import AssignedListCmp from './Components/AssignedListCmp';
+// import AssignedListCmp from './Components/AssignedListCmp';
 import FlashListCmp from './Components/FlashListCmp';
 import { styles } from './Style/Style';
+import OnProgressListCmp from './Components/OnProgressListCmp';
+import OverLayLoading from './Components/OverLayLoading';
 
 // create a component
 const FlashListCompleted = ({ navigation }) => {
@@ -19,8 +22,9 @@ const FlashListCompleted = ({ navigation }) => {
      */
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
+    const [loding, setLoading] = useState(true)
 
-    const onProgressList = useSelector((state) => state.complaint.totalOnProgressTicket.onProgressTotal, _.isEqual);
+    const onProgressList = useSelector(getOnProgressList);
     const onProgressTicket = useMemo(() => onProgressList, [onProgressList])
 
     return (
@@ -28,13 +32,11 @@ const FlashListCompleted = ({ navigation }) => {
             {/* Header  */}
             <HearderSecondary
                 navigation={navigation}
-                name="On Progress / Pending Tickets"
+                name="On Progress Tickets"
                 goBackButton={false}
             />
             <View style={styles.card} >
-                <View style={styles.cardHeader} >
-                    <Text style={styles.cardTitle} >On Progress / Pending Tickets</Text>
-                </View>
+                {loding && <OverLayLoading />}
                 <View style={{
                     flex: 1,
                     maxWidth: windowWidth,
@@ -42,26 +44,30 @@ const FlashListCompleted = ({ navigation }) => {
                 }} >
                     <Suspense fallback={<ActivityIndicator />} >
                         <FlashListCmp
-                            FlashRenderCmp={AssignedListCmp}
+                            FlashRenderCmp={OnProgressListCmp}
                             Assigned={onProgressTicket}
                             setCount={setCount}
                             refresh={refresh}
                             count={count}
+                            setLoading={setLoading}
                         />
                     </Suspense>
                 </View>
             </View>
             <View style={{
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: bgColor.cardBg,
-                minHeight: (windowHeight * 5 / 100)
+                backgroundColor: colorTheme.mainBgColor,
             }} >
                 <Text style={{
-                    ...styles.cardTitle,
+                    fontFamily: 'Roboto_500Medium',
+                    fontSize: windowWidth > 400 ? 14 : 12,
+                    paddingHorizontal: 5,
+                    overflow: 'hidden',
+                    color: colorTheme.mainColor,
                     fontFamily: 'Roboto_100Thin',
                     fontSize: 10,
-
                 }} >Pull Down To Refresh</Text>
             </View>
         </SafeAreaView>

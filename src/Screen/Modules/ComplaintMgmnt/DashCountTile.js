@@ -24,32 +24,36 @@ const DashCountTile = ({ navigation, name, count, id, escalated }) => {
     }, [navigation])
 
     return (
-        <TouchableNativeFeedback
-            onPress={() => dashCountUpdation()}
-        >
-            <View style={styles.mainTile} className="flex-col" >
-                <View className='flex flex-1 p-2 pb-0 flex-row'  >
-                    <View className='flex-1 basis-1/3' >
-                        <Text
-                            className='text-white'
-                            style={{ fontFamily: 'Roboto_500Medium' }}
-                        >{name}</Text>
+        <View className='overflow-hidden' >
+            <TouchableNativeFeedback
+                onPress={() => dashCountUpdation()}
+                useForeground={true}
+                style={{ backgroundColor: colorTheme.mainColor }}
+            >
+                <View style={styles.mainTile} className="flex-col overflow-hidden" >
+                    <View className='flex flex-1 p-2 pb-0 flex-row overflow-hidden'  >
+                        <View className='flex-1 basis-1/3 ' >
+                            <Text
+                                className='text-white'
+                                style={{ fontFamily: 'Roboto_500Medium' }}
+                            >{name}</Text>
+                        </View>
+                        <View className='flex justify-center items-center ' >
+                            <Text
+                                className='flex text-4xl text-white'
+                            >{count}</Text>
+                        </View>
                     </View>
-                    <View className='flex-1 justify-center items-center' >
-                        <Text
-                            className='flex text-4xl text-white'
-                        >{count}</Text>
+                    <View className='flex flex-row h-7 pb-2 pl-2 items-center content-center overflow-hidden'>
+                        <MegaphoneIcon className='flex self-baseline' color={colorTheme.iconColor} height={15} width={15} />
+                        <Text className='flex pl-1'
+                            style={{ fontFamily: 'Roboto_300Light', color: colorTheme.iconColor }} >Escalated</Text>
+                        <Text className='flex pl-3 font-bold'
+                            style={{ fontFamily: 'Roboto_300Light', color: colorTheme.iconColor }} >{escalated}</Text>
                     </View>
                 </View>
-                <View className='flex flex-row h-7 pb-2 pl-2 items-center content-center'>
-                    <MegaphoneIcon className='flex self-baseline' color={colorTheme.iconColor} height={15} width={15} />
-                    <Text className='flex pl-1'
-                        style={{ fontFamily: 'Roboto_300Light', color: colorTheme.iconColor }} >Escalated</Text>
-                    <Text className='flex pl-3 font-bold'
-                        style={{ fontFamily: 'Roboto_300Light', color: colorTheme.iconColor }} >{escalated}</Text>
-                </View>
-            </View>
-        </TouchableNativeFeedback>
+            </TouchableNativeFeedback>
+        </View>
     );
 };
 
@@ -63,14 +67,13 @@ const styles = StyleSheet.create({
         borderWidth: 0.1,
         borderRadius: 18,
         borderColor: colorTheme.mainColor,
-        overflow: 'hidden',
+        // overflow: 'hidden',
         backgroundColor: colorTheme.mainColor,
         elevation: 3,
-        shadowOpacity: 10,
+        shadowOpacity: 0,
         shadowRadius: 30,
         marginBottom: 10,
         marginHorizontal: 3,
-        overflow: 'scroll'
     },
     innerCountTile: {
         flex: 6,

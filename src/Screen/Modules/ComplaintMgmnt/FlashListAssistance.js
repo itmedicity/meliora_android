@@ -5,9 +5,11 @@ import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import _ from 'underscore';
 import HearderSecondary from '../../../Components/HearderSecondary';
-import { bgColor } from '../../../Constant/Colors';
+import { bgColor, colorTheme } from '../../../Constant/Colors';
+import { assistListUserWise } from '../../../Redux/ReduxSlice/ticketMagmntSlice';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 import { styles } from './Style/Style';
+import OverLayLoading from './Components/OverLayLoading';
 
 const FlashListCmp = lazy(() => import('./Components/FlashListCmp'));
 const AssistanceCmp = lazy(() => import('./Components/AssistanceCmp'))
@@ -17,8 +19,9 @@ const FlashListAssistance = ({ navigation }) => {
 
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
+    const [loding, setLoading] = useState(true)
 
-    const assitanceTicket = useSelector((state) => state.complaint.AssitanceListUserWise.assistanceList, _.isEqual);
+    const assitanceTicket = useSelector(assistListUserWise);
     const assitanceTickList = useMemo(() => assitanceTicket, [assitanceTicket]);
 
     return (
@@ -26,19 +29,15 @@ const FlashListAssistance = ({ navigation }) => {
             {/* Header  */}
             <HearderSecondary
                 navigation={navigation}
-                name="Assitance Needed"
+                name="Assitance Needed tickets"
                 goBackButton={false}
             />
-
-            <View style={styles.card} >
-                <View style={styles.cardHeader} >
-                    <Text style={styles.cardTitle} >Assistance Needed Tickets</Text>
-                </View>
+            <View style={{ ...styles.card }} >
+                {loding && <OverLayLoading />}
                 <View style={{
                     flex: 1,
                     maxWidth: windowWidth,
                     height: (windowHeight * 70 / 100)
-                    // height: windowHeight >= 1200 ? windowHeight - 146 : windowHeight - 120
                 }} >
                     <Suspense fallback={<ActivityIndicator />} >
                         <FlashListCmp
@@ -47,24 +46,27 @@ const FlashListAssistance = ({ navigation }) => {
                             setCount={setCount}
                             refresh={refresh}
                             count={count}
+                            setLoading={setLoading}
                         />
                     </Suspense>
                 </View>
             </View>
             <View style={{
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: bgColor.cardBg,
-                minHeight: (windowHeight * 5 / 100)
+                backgroundColor: colorTheme.mainBgColor,
             }} >
                 <Text style={{
-                    ...styles.cardTitle,
+                    fontFamily: 'Roboto_500Medium',
+                    fontSize: windowWidth > 400 ? 14 : 12,
+                    paddingHorizontal: 5,
+                    overflow: 'hidden',
+                    color: colorTheme.mainColor,
                     fontFamily: 'Roboto_100Thin',
                     fontSize: 10,
-
                 }} >Pull Down To Refresh</Text>
             </View>
-            {/* </ScrollView> */}
         </SafeAreaView >
     );
 };

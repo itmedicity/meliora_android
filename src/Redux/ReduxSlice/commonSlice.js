@@ -41,6 +41,9 @@ const initialState = {
         creditialStatus: [],
         status: 0,
         message: ""
+    },
+    reduxUpdation: {
+        count: 0
     }
 }
 
@@ -48,7 +51,11 @@ const initialState = {
 const commonFunSlice = createSlice({
     name: 'commonFunSlice',
     initialState,
-    reducers: {},
+    reducers: {
+        reduxUpdation: (state) => {
+            state.reduxUpdation.count += 1
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getEmployeeDetlLoggedDeptWise.pending, (state) => {
@@ -100,5 +107,21 @@ export {
     getComplaintdeptData,
     getMobileAppCreditial
 }
+
+export const getLoggeedEmpList = state => state.commonFun.loggedEmployeeCmpMagmnt.empDetl;
+export const reduxUpdate = state => state.commonFun.reduxUpdation.count;
+export const complaintDepartmentSliceData = (state) => {
+    const cmpDeptData = state.commonFun.companyDepartment?.cmpDept;
+    return cmpDeptData?.map((e) => {
+        return {
+            id: e.complaint_dept_slno,
+            label: e.complaint_dept_name,
+            value: e.complaint_dept_slno
+        }
+    })
+}
+export const getMobileAppCred = state => state.commonFun.mobileAppCreditial.creditialStatus
+
+export const { reduxUpdation } = commonFunSlice.actions
 
 export default commonFunSlice.reducer

@@ -6,8 +6,7 @@ import NoNewTicketCmp from './NoNewTicketCmp';
 // import NotAssignedCard from './NotAssignedCard';
 
 // create a component
-const FlashListCmp = ({ Assigned, setCount, refresh, count, FlashRenderCmp }) => {
-    console.log(Assigned)
+const FlashListCmp = ({ Assigned, setCount, refresh, count, FlashRenderCmp, setLoading }) => {
     const legth = Object.keys(Assigned).length
     return (
         <FlashList
@@ -23,6 +22,7 @@ const FlashListCmp = ({ Assigned, setCount, refresh, count, FlashRenderCmp }) =>
             //         width: windowWidth
             //     }
             // }
+            onLoad={() => setLoading(false)}
             refreshControl={
                 <RefreshControl
                     refreshing={refresh}

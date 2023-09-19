@@ -34,6 +34,9 @@ export const loginFuntion = createSlice({
 })
 
 export const selectLoginInform = (state) => state.loginFuntion.loginInfo.loginDetl;
+export const getLogiEmployeeID = state => state.loginFuntion.loginInfo.loginDetl?.emp_id;
+export const getLogiEmpDEPT = state => state.loginFuntion.loginInfo.loginDetl?.emp_dept;
+export const getSuperVisor = state => state.loginFuntion.loginInfo.loginDetl?.supervisor;
 
 export const { loggedInfomration, clearLoggedInformation } = loginFuntion.actions;
 

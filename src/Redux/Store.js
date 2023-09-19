@@ -5,6 +5,10 @@ import LoginSLice from './ReduxSlice/LoginSLice';
 import tokenSlice from './ReduxSlice/pushTokenSlice';
 import ticketMagmentDeptSlice from './ReduxSlice/ticketMagmentDeptSlice';
 import ticketMagmntSlice from './ReduxSlice/ticketMagmntSlice';
+import ComplaintPrioritySlice from './ReduxSlice/ComplaintPrioritySlice';
+import DateTimePickerSlice from './ReduxSlice/DateTimePickerSlice';
+import DropDownListSlice from './ReduxSlice/DropDownListSlice';
+import newTicketSlice from './ReduxSlice/newTicketSlice';
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +17,10 @@ export const store = configureStore({
         commonFun: commonSlice,
         complaint: complaintMagmntSlice,
         ticketUser: ticketMagmntSlice,
-        ticketDept: ticketMagmentDeptSlice
+        ticketDept: ticketMagmentDeptSlice,
+        cmpPriority: ComplaintPrioritySlice,
+        dateTimePicker: DateTimePickerSlice,
+        dorpDownListData: DropDownListSlice,
+        newTicket: newTicketSlice
     }
 })

@@ -57,6 +57,31 @@ const getCompleteListDeptWiseToday = createAsyncThunk('api/getCompleteListDeptWi
         })
 })
 
+//SUPER VISOR VERIFICATION LIST AFTER COMPLETION
+const getSecondLevelVerificationList = createAsyncThunk('api/getSecondLevelVerificationList', (id) => {
+    return axiosApi.get(`/mobileapp/forSuperVerifyList/deptwise/${id}`)
+        .then((response) => {
+            return response.data;
+        })
+})
+
+//DEPARTMENT WISE STATISTIC
+const getDepartmentWiseTicketCount = createAsyncThunk('api/getDepartmentWiseTicketCount', (id) => {
+    return axiosApi.get(`/mobileapp/getComDetlcountdeptwise/${id}`)
+        .then((response) => {
+            return response.data;
+        })
+})
+
+//EMPLOYEE WISE STATISTICS
+const getEmpTicketStatistic = createAsyncThunk('api/getEmpTicketStatistic', (id) => {
+    return axiosApi.get(`/mobileapp/getCountCompEmpBasedDept/${id}`)
+        .then((response) => {
+            return response.data;
+        })
+})
+
+
 
 const initialState = {
     assignList: {
@@ -90,6 +115,21 @@ const initialState = {
         message: ""
     },
     completeList: {
+        data: [],
+        status: 0,
+        message: ""
+    },
+    secondLevelList: {
+        data: [],
+        status: 0,
+        message: ""
+    },
+    departmentCountList: {
+        data: [],
+        status: 0,
+        message: ""
+    },
+    empCountList: {
         data: [],
         status: 0,
         message: ""
@@ -193,8 +233,54 @@ const ticketMagmentDeptSlice = createSlice({
                 state.completeList.message = "Success"
                 state.completeList.data = payload
             })
+            .addCase(getSecondLevelVerificationList.pending, (state) => {
+                state.secondLevelList.status = 0
+                state.secondLevelList.message = "Pending...."
+            })
+            .addCase(getSecondLevelVerificationList.rejected, (state) => {
+                state.secondLevelList.status = 2
+                state.secondLevelList.message = "Error...."
+            })
+            .addCase(getSecondLevelVerificationList.fulfilled, (state, { payload }) => {
+                state.secondLevelList.status = 1
+                state.secondLevelList.message = "Success"
+                state.secondLevelList.data = payload
+            })
+            .addCase(getDepartmentWiseTicketCount.pending, (state) => {
+                state.departmentCountList.status = 0
+                state.departmentCountList.message = "Pending...."
+            })
+            .addCase(getDepartmentWiseTicketCount.rejected, (state) => {
+                state.departmentCountList.status = 2
+                state.departmentCountList.message = "Error...."
+            })
+            .addCase(getDepartmentWiseTicketCount.fulfilled, (state, { payload }) => {
+                state.departmentCountList.status = 1
+                state.departmentCountList.message = "Success"
+                state.departmentCountList.data = payload
+            })
+            .addCase(getEmpTicketStatistic.pending, (state) => {
+                state.empCountList.status = 0
+                state.empCountList.message = "Pending...."
+            })
+            .addCase(getEmpTicketStatistic.rejected, (state) => {
+                state.empCountList.status = 2
+                state.empCountList.message = "Error...."
+            })
+            .addCase(getEmpTicketStatistic.fulfilled, (state, { payload }) => {
+                state.empCountList.status = 1
+                state.empCountList.message = "Success"
+                state.empCountList.data = payload
+            })
     }
 })
+
+
+export const secondLevelList = state => state.ticketDept.secondLevelList.data?.data;
+export const secondLevelCount = state => state.ticketDept.secondLevelList.data?.data?.length;
+export const getDeptWiseTicketCount = state => state.ticketDept.departmentCountList.data?.data?.[0];
+export const getEmpWiseTicketCount = state => state.ticketDept.empCountList.data?.data;
+
 
 export {
     getAssignListDeptWise,
@@ -203,7 +289,10 @@ export {
     getOnHoldBeforeAssigntDeptWise,
     getOnProgressListDeptWise,
     getforVerifyListDeptWise,
-    getCompleteListDeptWiseToday
+    getCompleteListDeptWiseToday,
+    getSecondLevelVerificationList,
+    getDepartmentWiseTicketCount,
+    getEmpTicketStatistic
 }
 
 export default ticketMagmentDeptSlice.reducer

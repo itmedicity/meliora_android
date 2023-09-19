@@ -1,71 +1,60 @@
 //import liraries
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback, useMemo, useState, useEffect, memo } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import { bgColor, fontColor } from "../../Constant/Colors";
 import { Card, Switch } from 'react-native-paper';
 import { useDispatch, useSelector } from "react-redux";
-import _ from "underscore";
 import { format } from "date-fns";
 import { axiosApi } from "../../config/Axiox";
-import { getMobileAppCreditial } from "../../Redux/Actions/common.action";
+import { selectLoginInform } from "../../Redux/ReduxSlice/LoginSLice";
+import { getMobileAppCred, getMobileAppCreditial } from "../../Redux/ReduxSlice/commonSlice";
+import { getPushToken } from "../../Redux/ReduxSlice/pushTokenSlice";
 // create a component
 
 const SettingsCmp = ({ title }) => {
 
     const dispatch = useDispatch();
     const [count, setCount] = useState(0)
-    const [mobileAppRegisterd, setMobileAppRegisterd] = useState(false)
-    const [pushNotRequired, setPushNotRequired] = useState(false)
-
-    const [apiStatus, setApiStatus] = useState(false)
 
     const [settings, setSettings] = useState(false);
     const [notification, setNotification] = useState(false);
 
     // getting the expo credential updation details
-    const loginInform = useSelector((state) => state.loginFuntion.loginDetl, _.isEqual);
+    const loginInform = useSelector(selectLoginInform);
     const loginEmpDetl = useMemo(() => loginInform, [loginInform]);
 
     const { emp_id } = loginEmpDetl;
 
     useEffect(() => {
-        dispatch(getMobileAppCreditial(emp_id));
+        dispatch(getMobileAppCreditial(emp_id))
     }, [emp_id, count])
 
-    const token = useSelector((state) => state.expoPushToken.payload, _.isEqual);
+    const token = useSelector(getPushToken)
     const appToken = useMemo(() => token, [token]);
 
     //expo status in database
 
-    const expoDetl = useSelector((state) => state.getMobileAppCreditial, _.isEqual);
+    const expoDetl = useSelector(getMobileAppCred)
     const expoCredDetl = useMemo(() => expoDetl, [expoDetl]);
 
     useEffect(() => {
-        const { creditialStatus, status } = expoCredDetl;
-        setApiStatus(status);
-        if (status === true) {
-            const { mob_app_required, mobile_app_registred } = creditialStatus;
+        const { mob_app_required, mobile_app_registred } = expoCredDetl;
+        if (mob_app_required === 1) {
+            // setMobileAppRegisterd(true)
+            setNotification(true)
+        } else {
+            // setMobileAppRegisterd(false)
+            setNotification(false)
+        };
 
-            if (mob_app_required === 1) {
-                // setMobileAppRegisterd(true)
-                setNotification(true)
-            } else {
-                // setMobileAppRegisterd(false)
-                setNotification(false)
-            };
-
-            if (mobile_app_registred === 1) {
-                // setPushNotRequired(true)
-                setSettings(true)
-            } else {
-                // setPushNotRequired(false);
-                setSettings(false)
-            }
+        if (mobile_app_registred === 1) {
+            // setPushNotRequired(true)
+            setSettings(true)
+        } else {
+            // setPushNotRequired(false);
+            setSettings(false)
         }
-
     }, [expoCredDetl])
-
-
 
     const postData = {
         mobile_app_registred: 1,
@@ -169,7 +158,7 @@ const SettingsCmp = ({ title }) => {
                 <View style={styles.switchContainer}>
                     <Switch
                         value={settings}
-                        onValueChange={useCallback(() => updateTheExpoPushToken(), [updateTheExpoPushToken])}
+                        onValueChange={updateTheExpoPushToken}
                         color="#fa3f7e"
                     />
                 </View>
@@ -181,7 +170,7 @@ const SettingsCmp = ({ title }) => {
                 <View style={styles.switchContainer}>
                     <Switch
                         value={notification}
-                        onValueChange={useCallback(() => enableDisableNotificationSetting(), [enableDisableNotificationSetting])}
+                        onValueChange={enableDisableNotificationSetting}
                         color="#fa3f7e"
                         disabled={!settings}
                     />
@@ -205,10 +194,9 @@ const styles = StyleSheet.create({
     },
     switchContainer: {
         flex: 1,
-        // backgroundColor: 'green',
         alignItems: 'center'
     }
 });
 
 //make this component available to the app
-export default SettingsCmp;
+export default memo(SettingsCmp);

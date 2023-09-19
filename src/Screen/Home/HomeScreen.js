@@ -37,7 +37,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 //Notification imports
 import * as Notifications from "expo-notifications";
-import { ActionType } from '../../Redux/Constants/action.type'
+// import { ActionType } from '../../Redux/Constants/action.type'
 import { useDispatch } from "react-redux";
 import AvatarMenu from "./AvatarMenu";
 
@@ -55,6 +55,9 @@ Notifications.setNotificationHandler({
 
 import { DATA } from "./func/HomeFunc";
 import MyTicketDash from "../Modules/ComplaintMgmnt/Components/MyTicketDash";
+import { getExpoPushToken } from "../../Redux/ReduxSlice/pushTokenSlice";
+import DeptStatistic from "../Dashboard/DeptStatistic";
+import DepartmentStat from "../Dashboard/DepartmentStat";
 
 // create a component
 const HomeScreen = ({ navigation }) => {
@@ -63,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
   const [expoPushToken, setExpoPushToken] = useState();
   const [loding, setLoading] = useState(true);
 
-  const { FETCH_PUSH_TOKEN } = ActionType;
+  // const { FETCH_PUSH_TOKEN } = ActionType;
 
   //getting the pushtoken
   useEffect(() => {
@@ -85,7 +88,9 @@ const HomeScreen = ({ navigation }) => {
       }
 
       const pushTokenData = await Notifications.getExpoPushTokenAsync();
-      dispatch({ type: FETCH_PUSH_TOKEN, payload: pushTokenData })
+      // dispatch({ type: FETCH_PUSH_TOKEN, payload: pushTokenData })
+
+      dispatch(getExpoPushToken(pushTokenData))
       // setExpoPushToken(pushTokenData);
       // console.log(pushTokenData);
 
@@ -211,32 +216,36 @@ const HomeScreen = ({ navigation }) => {
       {/* Header Component */}
       <HeaderMain navigation={navigation} name="Meliora" />
       <View className="flex" >
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          fadingEdgeLength={10}
-          className="flex"
-        >
-          {
-            DATA.map((val) => {
-              return <AvatarMenu
-                mainTitle={val.title}
-                icon={val.icon}
-                iconColor={colorTheme.iconColor}
-                avatarColor={colorTheme.secondaryBgColor}
-                key={val.id}
-                navigation={navigation}
-                routeName={val.routeName}
-              />
-            })
-          }
-        </ScrollView>
-
-        <View className="flex" >
-          <View className="flex p-2" >
-            <MyTicketDash />
-          </View>
+        <View>
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            fadingEdgeLength={10}
+            className="flex"
+          >
+            {
+              DATA.map((val) => {
+                return <AvatarMenu
+                  mainTitle={val.title}
+                  icon={val.icon}
+                  iconColor={colorTheme.iconColor}
+                  avatarColor={colorTheme.secondaryBgColor}
+                  key={val.id}
+                  navigation={navigation}
+                  routeName={val.routeName}
+                />
+              })
+            }
+          </ScrollView>
         </View>
+
+        <ScrollView className="flex" >
+          <View className="flex p-2" >
+            {/* <MyTicketDash /> */}
+            {/* <DeptStatistic /> */}
+            <DepartmentStat />
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );

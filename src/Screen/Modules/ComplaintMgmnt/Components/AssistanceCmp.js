@@ -1,22 +1,21 @@
 //import liraries
-import React, { memo, useState, lazy, Suspense, useCallback, useMemo, useEffect } from 'react';
-import { View, Text } from 'react-native';
-import { bgColor, fontColor } from '../../../../Constant/Colors';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import { Button } from 'react-native-paper'
+import React, { memo, useCallback, useMemo } from 'react';
+import { View, Text, Pressable, Alert } from 'react-native';
+import { bgColor, colorTheme, fontColor } from '../../../../Constant/Colors';
 import { styles } from '../Style/Style';
-import { useDispatch } from 'react-redux'
-import { getTheActualEmployee } from '../../../../Redux/Actions/complaintMagmt.action';
-import _ from 'underscore';
-
-const RectifyModal = lazy(() => import('./RectifyModal'))
+import { useDispatch, useSelector } from 'react-redux'
+import { format } from 'date-fns';
+import { getLogiEmployeeID } from '../../../../Redux/ReduxSlice/LoginSLice';
+import { axiosApi } from '../../../../config/Axiox';
+import { reduxUpdation } from '../../../../Redux/ReduxSlice/commonSlice';
 
 // create a component
 const AssistanceCmp = ({ data }) => {
 
     const dispatch = useDispatch();
+
     const compDetlData = useMemo(() => data, [data])
+    const emp_id = useSelector(getLogiEmployeeID)
 
     const {
         complaint_slno, //complaint slno
@@ -24,37 +23,36 @@ const AssistanceCmp = ({ data }) => {
         req_type_name, // request complaint type - complaint,new requirement , modification
         complaint_type_name, // comolaint type name hardware ,software ,etc
         location, // location name in detail
-        comp_reg_emp, //  register employee name-complaint
-        empdept, // registerd department 
         hic_policy_name,
         complaint_desc,
         compalint_priority,
-        assist_assign_date
+        create_employee,
+        sec_name,
+        complaint_hicslno,
+        requsted_date,
+        assist_requested_emp
     } = compDetlData;
 
-    const [visible, setVisible] = useState(false);
-
-    useEffect(() => {
-        return () => {
-            dispatch(getTheActualEmployee(0))
-        }
-    }, [getTheActualEmployee, dispatch])
-
     const onRectifyModal = useCallback(async () => {
-        dispatch(getTheActualEmployee(complaint_slno))
-        setVisible(true)
-        // console.log(compalint_status)
-    }, [])
+        const postData = {
+            assigned_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            assist_receive: 1,
+            complaint_slno: complaint_slno,
+            assigned_emp: emp_id
+        }
+
+        const result = await axiosApi.patch('/complaintassign/assistant/recieved', postData);
+        const { success } = result.data;
+        if (success === 1) {
+            Alert.alert("Assistance Accepted")
+            dispatch(reduxUpdation())
+        } else {
+            Alert.alert("Error ! , Contact System Administrator")
+        }
+    }, [emp_id, complaint_slno])
 
     return (
-        <View style={styles.FLCP_container}>
-            <Suspense>
-                <RectifyModal
-                    visible={visible}
-                    setVisible={setVisible}
-                    data={compDetlData}
-                />
-            </Suspense>
+        <View style={{ ...styles.FLCP_container, borderRadius: 10, borderWidth: 0.2, borderColor: colorTheme.switchTrack, marginHorizontal: 5, marginVertical: 2 }}>
             <View style={{
                 marginHorizontal: 5
             }} >
@@ -68,24 +66,22 @@ const AssistanceCmp = ({ data }) => {
                         alignContent: 'center',
                         alignItems: 'center'
                     }} >
-                        <Text style={styles.FLCP_captionStyle} >{comp_reg_emp}</Text>
+                        <Text style={styles.FLCP_captionStyle} >{create_employee}</Text>
                         <Text style={{ color: bgColor.statusbar }}>@</Text>
-                        <Text style={{ ...styles.FLCP_captionStyle, fontStyle: 'italic' }} >{empdept}</Text>
+                        <Text style={{ ...styles.FLCP_captionStyle, fontStyle: 'italic' }} >{sec_name}</Text>
                     </View>
-                    <View style={{
+                    <View className='flex grow' style={{
                         flexDirection: 'row',
                         alignContent: 'center',
-                        alignItems: 'center'
+                        justifyContent: 'flex-end',
+
                     }} >
-                        {/* <Text style={{ ...styles.cardTitle, fontStyle: 'italic' }} >{priority}</Text> */}
-                        <MaterialCommunityIcons
-                            name='alarm-light'
-                            color={
-                                compalint_priority === 0 ? 'green' :
-                                    compalint_priority === 1 ? 'red' : 'orange'
-                            }
-                            size={15}
-                        />
+                        {
+                            compalint_priority === 1 && <View className='flex justify-center px-2 rounded-md' style={{ borderWidth: 0.2, borderColor: 'red' }} >
+                                <Text style={{ fontFamily: 'Roboto_500Medium', fontSize: 12 }}
+                                    className='antialiased text-red-600'>Priority ticket</Text>
+                            </View>
+                        }
                     </View>
                 </View>
                 {/* register time and numeber section */}
@@ -162,47 +158,39 @@ const AssistanceCmp = ({ data }) => {
                     <Text style={styles.FLCP_headStyle}>Location :</Text>
                     <Text style={styles.FLCP_cardTitle} >{location}</Text>
                 </View>
+                {
+                    complaint_hicslno === 1 &&
+                    <View style={{
+                        // flex: 1,
+                        flexDirection: 'row'
+                    }} >
+                        <Text style={styles.FLCP_headStyle}>ICRA Recommentation :</Text>
+                        <Text style={styles.FLCP_cardTitle} >{hic_policy_name}</Text>
+                    </View>
+                }
                 <View style={{
                     // flex: 1,
                     flexDirection: 'row'
                 }} >
-                    <Text style={styles.FLCP_headStyle}>ICRA Recommentation :</Text>
-                    <Text style={styles.FLCP_cardTitle} >{hic_policy_name}</Text>
+                    <Text style={styles.FLCP_headStyle}>Assistance requested date:</Text>
+                    <Text style={styles.FLCP_cardTitle} >{requsted_date}</Text>
                 </View>
                 <View style={{
                     // flex: 1,
                     flexDirection: 'row'
                 }} >
-                    <Text style={styles.FLCP_headStyle}>Assigned Date :</Text>
-                    <Text style={styles.FLCP_cardTitle} >{assist_assign_date}</Text>
+                    <Text style={styles.FLCP_headStyle}>Assist requested Employee</Text>
+                    <Text style={styles.FLCP_cardTitle} >{assist_requested_emp}</Text>
                 </View>
             </View>
-            <View style={{
-                flexGrow: 1,
-                flexDirection: 'row',
-                paddingHorizontal: 6,
-                justifyContent: 'space-between',
-                marginVertical: 5
-            }} >
-                <View style={{ flex: 1 }} >
-                    <Button
-                        icon={() => <AntDesign
-                            name='rightcircle'
-                            color='#40a629'
-                            size={20}
-                        />
-                        }
-                        mode='elevated'
-                        style={{
-                            borderRadius: 10,
-                            backgroundColor: '#F9FFF6'
-                        }}
-                        labelStyle={{ color: '#40a629' }}
-                        onPress={() => onRectifyModal()}
-                    >
-                        Rectify
-                    </Button>
-                </View>
+            <View className='pb-1 pt-1' >
+                <Pressable
+                    onPress={onRectifyModal}
+                    className='flex'
+                    style={{ borderWidth: 0.3, borderRadius: 10, marginHorizontal: 25, height: 30, justifyContent: 'center', backgroundColor: colorTheme.switchTrack }}
+                >
+                    <Text className='text-center text-white'>Press to accept the Assistance</Text>
+                </Pressable>
             </View>
         </View>
     );

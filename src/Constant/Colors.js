@@ -37,5 +37,12 @@ export const colorTheme = {
   deptColor3: "#a7e4a3",
   deptColor4: "#d1fafe",
   deptColor5: "#46cdf5",
-  deptColor6: "#40b9f7"
+  deptColor6: "#40b9f7",
+  greenVarient: "#82c259",
+  fontColorGreyBlack: '#252526',
+  fontColorLightGrey: '#8e8e93',
+  fontColorLightBlue: '#53b4c1',
+  switchTrack: '#254b6e',
+  switchThumb: '#132851',
+  bgGreyWhite: '#fffdff'
 }

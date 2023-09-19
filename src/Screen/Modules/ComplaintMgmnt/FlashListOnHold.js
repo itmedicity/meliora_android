@@ -4,9 +4,11 @@ import { ActivityIndicator } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import _ from 'underscore';
 import HearderSecondary from '../../../Components/HearderSecondary';
-import { bgColor } from '../../../Constant/Colors';
+import { bgColor, colorTheme } from '../../../Constant/Colors';
+import { getOnholdCompList } from '../../../Redux/ReduxSlice/ticketMagmntSlice';
 import { windowHeight, windowWidth } from '../../../utils/Dimentions';
 import { styles } from './Style/Style';
+import OverLayLoading from './Components/OverLayLoading';
 
 const FlashListCmp = lazy(() => import('./Components/FlashListCmp'))
 const OnHoldCmp = lazy(() => import('./Components/OnHoldCmp'))
@@ -16,8 +18,9 @@ const FlashListOnHold = ({ navigation }) => {
 
     const [count, setCount] = useState(0)
     const [refresh, setRefresh] = useState(false)
+    const [loding, setLoading] = useState(true)
 
-    const onHoldTicketList = useSelector((state) => state.complaint.totalOnholdTicketList.onHoldTicked, _.isEqual);
+    const onHoldTicketList = useSelector(getOnholdCompList);
     const onHoldTickt = useMemo(() => onHoldTicketList, [onHoldTicketList]);
 
     return (
@@ -25,13 +28,11 @@ const FlashListOnHold = ({ navigation }) => {
             {/* Header  */}
             <HearderSecondary
                 navigation={navigation}
-                name="On Hold"
+                name="On Hold tickets"
                 goBackButton={false}
             />
             <View style={styles.card} >
-                <View style={styles.cardHeader} >
-                    <Text style={styles.cardTitle} >OnHold Tickets</Text>
-                </View>
+                {loding && <OverLayLoading />}
                 <View style={{
                     flex: 1,
                     maxWidth: windowWidth,
@@ -44,21 +45,25 @@ const FlashListOnHold = ({ navigation }) => {
                             setCount={setCount}
                             refresh={refresh}
                             count={count}
+                            setLoading={setLoading}
                         />
                     </Suspense>
                 </View>
             </View>
             <View style={{
+                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: bgColor.cardBg,
-                minHeight: (windowHeight * 5 / 100),
+                backgroundColor: colorTheme.mainBgColor,
             }} >
                 <Text style={{
-                    ...styles.cardTitle,
+                    fontFamily: 'Roboto_500Medium',
+                    fontSize: windowWidth > 400 ? 14 : 12,
+                    paddingHorizontal: 5,
+                    overflow: 'hidden',
+                    color: colorTheme.mainColor,
                     fontFamily: 'Roboto_100Thin',
                     fontSize: 10,
-
                 }} >Pull Down To Refresh</Text>
             </View>
         </SafeAreaView>

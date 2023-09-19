@@ -8,15 +8,14 @@ export const tokenSlice = createSlice({
     name: "pushToknSlice",
     initialState,
     reducers: {
-        expoPushToken: (state, { payload }) => {
-            state.pushToken = {
-                ...state.pushToken,
-                ...payload
-            }
+        getExpoPushToken: (state, { payload }) => {
+            state.pushToken = payload
         }
     }
 })
 
-export const { expoPushToken } = tokenSlice.actions;
+export const getPushToken = state => state.expoPushToken.pushToken;
+
+export const { getExpoPushToken } = tokenSlice.actions;
 
 export default tokenSlice.reducer
