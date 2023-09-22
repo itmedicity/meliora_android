@@ -55,33 +55,36 @@ const NotAssignedCard = ({ data, setCount }) => {
 
     const assignData = useMemo(() => data, [data]);
 
-    const postData = {
-        complaint_slno: complaint_slno,
-        assigned_emp: emp_id,
-        assigned_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-        assign_rect_status: 0,
-        assigned_user: emp_id,
-        assign_status: 1
-    }
+    const postData = useMemo(() => {
+        return {
+            complaint_slno: complaint_slno,
+            assigned_emp: emp_id,
+            assigned_date: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            assign_rect_status: 0,
+            assigned_user: emp_id,
+            assign_status: 1
+        }
+    }, [complaint_slno, emp_id])
 
     //quick assign function
     const quickAssignMent = useCallback(async () => {
-        const result = await axiosApi.post('/complaintassign', postData);
-        const { message, success } = result.data;
-        if (success === 1) {
-            setCount(complaint_slno)
-            setModalVisible(true)
-        } else if (success === 0) {
-            Alert.alert('Caution !!', message, [
-                { text: 'OK' },
-            ]);
-        } else {
-            Alert.alert('Caution !!', message, [
-                { text: 'OK' },
-            ]);
-        }
+        setModalVisible(true)
+        // const result = await axiosApi.post('/complaintassign', postData);
+        // const { message, success } = result.data;
+        // if (success === 1) {
+        //     setCount(complaint_slno)
+        //     setModalVisible(true)
+        // } else if (success === 0) {
+        //     Alert.alert('Caution !!', message, [
+        //         { text: 'OK' },
+        //     ]);
+        // } else {
+        //     Alert.alert('Caution !!', message, [
+        //         { text: 'OK' },
+        //     ]);
+        // }
 
-    }, [postData])
+    }, [])
 
     // const quickAsign = useCallback(() => quickAssignMent, [quickAssignMent]);
 
@@ -106,6 +109,7 @@ const NotAssignedCard = ({ data, setCount }) => {
             <AlertModal
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
+                postData={postData}
             />
             <TicketAssignModal
                 openModelState={setVisible}

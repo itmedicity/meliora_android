@@ -80,7 +80,7 @@ const DashDesignTwo = ({ setCount }) => {
                         <EvilIcons name="like" size={28} color="white" />
                     </View>
                     <Text
-                        className='flex grow pl-5 text-white' style={{ fontFamily: 'Roboto_500Medium' }} >Completed Tickets</Text>
+                        className='flex grow pl-5 text-white' style={{ fontFamily: 'Roboto_500Medium' }} >Completed Tickets(Today)</Text>
                     <Text className='flex  text-center text-white' style={{ fontFamily: 'Roboto_500Medium', width: '18%' }} >{e?.total}</Text>
                 </View>
             </View>

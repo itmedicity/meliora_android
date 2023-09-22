@@ -1,9 +1,35 @@
 import { Modal, Pressable, Text, View } from 'react-native'
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 import { colorTheme } from '../../../../../Constant/Colors';
 import { HandThumbUpIcon } from 'react-native-heroicons/outline'
+import { axiosApi } from '../../../../../config/Axiox';
+import { useDispatch } from 'react-redux';
+import { reduxUpdation } from '../../../../../Redux/ReduxSlice/commonSlice';
+import { AntDesign } from '@expo/vector-icons';
 
-const AlertModal = ({ modalVisible, setModalVisible }) => {
+const AlertModal = ({ modalVisible, setModalVisible, postData }) => {
+
+    const dispatch = useDispatch()
+
+    const quickAssignMent = useCallback(async () => {
+
+        const result = await axiosApi.post('/complaintassign', postData);
+        const { message, success } = result.data;
+        if (success === 1) {
+            // setCount(complaint_slno)
+            dispatch(reduxUpdation())
+            setModalVisible(false)
+        } else if (success === 0) {
+            Alert.alert('Caution !!', message, [
+                { text: 'OK' },
+            ]);
+        } else {
+            Alert.alert('Caution !!', message, [
+                { text: 'OK' },
+            ]);
+        }
+
+    }, [postData])
 
     return (
         <View style={{
@@ -48,17 +74,28 @@ const AlertModal = ({ modalVisible, setModalVisible }) => {
                             <View className='flex-1 justify-center items-center' >
                                 <Text
                                     style={{ fontFamily: 'Roboto_400Regular', fontSize: 16, color: colorTheme.greenVarient }}
-                                >This ticket was assigned to you !!</Text>
-                                <Text style={{ fontFamily: 'Roboto_300Light', color: colorTheme.SecondfontColor }} >Check Your Assigned List</Text>
+                                >Do you want to quick assign !!</Text>
+                                <Text style={{ fontFamily: 'Roboto_300Light', color: colorTheme.SecondfontColor }} >
+                                    Press <AntDesign name="closecircleo" size={12} color="red" /> to cancel !! </Text>
                             </View>
-                            <View className='flex-1 items-center' >
-                                <Pressable
-                                    className='w-20 items-center h-10 justify-center rounded-lg border-2'
-                                    style={{ borderColor: colorTheme.greenVarient }}
-                                    onPress={() => setModalVisible(!modalVisible)}>
-                                    {/* <Text style={{ fontFamily: 'Roboto_500Medium', fontSize: 18 }}>Ok</Text> */}
-                                    <HandThumbUpIcon width={30} height={30} color={colorTheme.iconColor} />
-                                </Pressable>
+                            <View className='flex flex-1 flex-row' >
+                                <View className='flex-1 items-center' >
+                                    <Pressable
+                                        className='w-20 items-center h-10 justify-center rounded-lg border-2'
+                                        style={{ borderColor: 'red' }}
+                                        onPress={() => setModalVisible(!modalVisible)}>
+                                        <AntDesign name="closecircleo" size={26} color="red" />
+                                        {/* <HandThumbUpIcon width={30} height={30} color={colorTheme.iconColor} /> */}
+                                    </Pressable>
+                                </View>
+                                <View className='flex-1 items-center' >
+                                    <Pressable
+                                        className='w-20 items-center h-10 justify-center rounded-lg border-2'
+                                        style={{ borderColor: colorTheme.greenVarient }}
+                                        onPress={quickAssignMent}>
+                                        <HandThumbUpIcon width={30} height={30} color={colorTheme.greenVarient} />
+                                    </Pressable>
+                                </View>
                             </View>
                         </View>
                     </View>

@@ -72,13 +72,14 @@ const TicketAssignModal = ({ openModelState, openState, data }) => {
                     assign_rect_status: 0,
                     assigned_user: loginEmpId,
                     compalint_priority: compPriority,
-                    aprrox_date: selectedDate,
+                    aprrox_date: selectedDate === '' ? moment().format('yyyy-MM-DD HH:mm:ss') : selectedDate,
                     assign_status: 1
                 }
             })
 
             const updateAssignStatus = await axiosApi.post(`/complaintassign/detailassign`, postAssignData)
             const { message, success } = await updateAssignStatus.data;
+
             if (success === 1) {
                 alert(message)
                 dispatch(reduxUpdation())

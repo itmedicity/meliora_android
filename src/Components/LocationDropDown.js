@@ -50,7 +50,7 @@ const LocationDropDown = () => {
                 onChange={item => {
                     setValue(item.sec_id);
                     setIsFocus(false);
-                    dispatch(updateLocationValue(item.sec_id))
+                    dispatch(updateLocationValue(item))
                 }}
                 renderLeftIcon={() => (
                     <AntDesign

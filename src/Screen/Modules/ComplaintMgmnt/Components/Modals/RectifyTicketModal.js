@@ -20,6 +20,8 @@ import { reduxUpdation } from '../../../../../Redux/ReduxSlice/commonSlice'
 const RectifyTicketModal = ({ openState, openModelState, data }) => {
     const dispatch = useDispatch();
 
+    const { complaint_slno, complaint_desc } = data;
+
     const [remarks, setRemarks] = useState('')
 
     //EMPLOYEE SELECTION
@@ -91,6 +93,16 @@ const RectifyTicketModal = ({ openState, openModelState, data }) => {
             secondName="Assigned tickets rectification"
         >
             <ScrollView>
+                <View className='flex' style={{ paddingBottom: 2, flexDirection: 'row' }}  >
+                    <Text style={{ fontFamily: 'Roboto_100Thin' }} >Ticket #</Text>
+                    <Text style={{ fontFamily: 'Roboto_500Medium', paddingLeft: 10 }} >{complaint_slno}</Text>
+                </View>
+                <View style={{ pb: 0.5 }}  >
+                    <Text style={{ fontFamily: 'Roboto_100Thin' }} >Ticket Description</Text>
+                </View>
+                <View style={{ pb: 0.5 }}  >
+                    <Text style={{ fontFamily: 'Roboto_400Regular', paddingBottom: 3 }} >{complaint_desc}</Text>
+                </View>
                 <View style={{ pb: 0.5 }}  >
                     <Text style={{ fontFamily: 'Roboto_100Thin' }} >Select the ticket rectify employees</Text>
                 </View>
@@ -144,7 +156,7 @@ const RectifyTicketModal = ({ openState, openModelState, data }) => {
                     </Pressable>
                 </View>
             </ScrollView>
-        </BaseModal>
+        </BaseModal >
     )
 }
 

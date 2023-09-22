@@ -6,6 +6,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
+  Image
 } from "react-native";
 
 import {
@@ -53,31 +54,52 @@ const CustomDrawer = (props) => {
       }}
     >
       <ImageBackground
-        source={require("../../assets/images/bgImageNewTheme.png")}
+        source={require("../../assets/bgImageNewTheme.png")}
         style={{ padding: 5, flex: 1, opacity: 1, marginTop: -4 }}
       // resizeMode='repeat'
       >
         <View style={{ flex: 1, }} >
-          <Text
+          <View
+            className="border-b-pink-950"
             style={{
-              color: colorTheme.fontColor,
-              fontSize: 18,
-              textTransform: 'capitalize',
-              fontFamily: "Roboto_500Medium",
-            }}
-          >
-            {useName?.toLowerCase()}
-          </Text>
-          <Text
-            style={{
-              color: colorTheme.fontColor,
-              fontSize: 18,
-              textTransform: 'capitalize',
-              fontFamily: "Roboto_700Bold",
-            }}
-          >
-            {department?.toLowerCase()}
-          </Text>
+              marginHorizontal: -5,
+              paddingHorizontal: 6,
+              paddingTop: 3,
+              paddingBottom: 3,
+              borderBottomWidth: 1.8
+            }}>
+            <View className="flex" style={{ flexDirection: 'row', }} >
+              <View className="flex grow" style={{}} >
+                <Text
+                  style={{
+                    color: colorTheme.fontColor,
+                    fontSize: 18,
+                    textTransform: 'capitalize',
+                    fontFamily: "Roboto_400Regular",
+                  }}
+                >
+                  {useName?.toLowerCase()}
+                </Text>
+                <Text
+                  style={{
+                    color: colorTheme.fontColor,
+                    fontSize: 15,
+                    textTransform: 'capitalize',
+                    fontFamily: "Roboto_400Regular",
+                  }}
+                >
+                  {department?.toLowerCase()}
+                </Text>
+              </View>
+              <View className="flex justify-center">
+                <Image
+                  source={require("../../assets/LogoMeliora.png")}
+                  style={{ width: 35, height: 35 }}
+                  className="flex"
+                />
+              </View>
+            </View>
+          </View>
 
           <ScrollView
             style={{ flex: 1, }}

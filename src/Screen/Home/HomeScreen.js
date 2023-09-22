@@ -46,9 +46,9 @@ SplashScreen.preventAutoHideAsync();
 Notifications.setNotificationHandler({
   handleNotification: async () => {
     return {
-      shouldPlaySound: true,
-      shouldSetBadge: true,
       shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
     };
   },
 });

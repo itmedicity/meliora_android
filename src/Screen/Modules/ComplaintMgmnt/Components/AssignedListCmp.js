@@ -54,7 +54,7 @@ const AssignedListCmp = ({ data }) => {
             <RectifyTicketModal
                 openState={openState}
                 openModelState={openModelState}
-                data={complaint_slno}
+                data={compDetlData}
             />
 
             <Suspense>

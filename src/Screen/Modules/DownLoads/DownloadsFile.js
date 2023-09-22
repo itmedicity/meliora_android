@@ -40,12 +40,11 @@ const DownloadsFile = () => {
         getDownloadApi()
     }, [disable])
 
-
     const donsloadandroidApkFromUrl = async () => {
         setVisible(true)
-        const filename = `'${apkFileName.toString()}'`;
+        const filename = `'Meliora.apk'`;
         const result = await FileSystem.downloadAsync(
-            `${apkLink.toString()}`,
+            `https://travancoremedicity.in/apk/Meliora.apk`,
             FileSystem.documentDirectory + filename
         );
         save(result.uri, filename, result.headers["Content-Type"])
@@ -75,6 +74,7 @@ const DownloadsFile = () => {
             shareAsync(uri)
         }
     }
+
     return (
         <View>
             <StatusBar animated />

@@ -42,8 +42,6 @@ const NewTickets = () => {
     const emp_ID = useSelector(getLogiEmployeeID)
     const emp_dept = useSelector(getLogiEmpDEPT)
 
-    // console.log(compSlno)
-
     useEffect(() => {
         let type = complaintType?.filter((e) => e.complaint_dept_slno === cmpDept)
             .map((e) => {
@@ -64,9 +62,11 @@ const NewTickets = () => {
             priority_check: priority === true ? 1 : 0,
             complaint_hicslno: icra === true ? 1 : 0,
             compalint_status: 0,
-            cm_location: location,
+            cm_location: location?.sec_id,
             create_user: emp_ID,
             priority_reason: priority === true ? priorityRemark : null,
+            priority: priority === true ? 'Priority Ticket' : "Normal Ticket",
+            locationName: location.sec_name
         }
         if (compSlno === undefined) {
             Alert.alert("complaint slno is undefined")
@@ -103,7 +103,6 @@ const NewTickets = () => {
         }
 
     }, [compSlno, desc, emp_dept, cmpDept, selectedtype, priority, icra, location, emp_ID, priorityRemark, navigation])
-
 
     return (
         <KeyboardAvoidingView enabled behavior='height' keyboardVerticalOffset={0}  >
